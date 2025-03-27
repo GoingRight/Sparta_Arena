@@ -46,7 +46,7 @@ public class EnemyCar : EnemyBoss
 
     protected override void Move()
     {
-        base.Move();
+
     }
 
     protected override void Attack()
@@ -56,7 +56,7 @@ public class EnemyCar : EnemyBoss
 
     protected override void FindPlayer()
     {
-        base.FindPlayer();
+
     }
 
     private IEnumerator FlashCo()
