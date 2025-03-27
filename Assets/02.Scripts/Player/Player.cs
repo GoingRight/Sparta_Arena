@@ -4,8 +4,20 @@ using UnityEngine;
 
 public class Player : Character
 {
-    protected override void TakeDamage(float damage)
+    [field: Header("Animations")]
+    [field: SerializeField] public PlayerAnimationData animationData { get; private set; }
+
+    public Animator animator { get; private set; }
+    public PlayerController input { get; private set; }
+    public Rigidbody controller { get; private set; }
+
+    private void Awake()
     {
-        throw new System.NotImplementedException();
+        animationData.Initialize();
+        animator = GetComponent<Animator>();
+        input = GetComponent<PlayerController>();
+        controller = GetComponent<Rigidbody>();
     }
+
+
 }

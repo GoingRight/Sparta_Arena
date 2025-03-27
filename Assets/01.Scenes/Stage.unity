@@ -123,60 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &202059056 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3467783829607200908, guid: 3b2a41c817dff1d4699f26746ede3ed9,
-    type: 3}
-  m_PrefabInstance: {fileID: 3067956105701122196}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &202059058
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 202059056}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c42c29e9891b406469f81aea424384f9, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
---- !u!1 &501216798 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1235191789787150589, guid: 3b2a41c817dff1d4699f26746ede3ed9,
-    type: 3}
-  m_PrefabInstance: {fileID: 3067956105701122196}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &501216800
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 501216798}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 35f27e9cf1913d7438445bc2a14ffee8, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1008298825
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,21 +391,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Map
       objectReference: {fileID: 0}
-    - target: {fileID: 1396656939968310649, guid: 3b2a41c817dff1d4699f26746ede3ed9,
-        type: 3}
-      propertyPath: Speed
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1396656939968310649, guid: 3b2a41c817dff1d4699f26746ede3ed9,
-        type: 3}
-      propertyPath: LeftDoor
-      value: 
-      objectReference: {fileID: 501216800}
-    - target: {fileID: 1396656939968310649, guid: 3b2a41c817dff1d4699f26746ede3ed9,
-        type: 3}
-      propertyPath: RightDoor
-      value: 
-      objectReference: {fileID: 202059058}
     - target: {fileID: 4939378642107965553, guid: 3b2a41c817dff1d4699f26746ede3ed9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -513,15 +444,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3467783829607200908, guid: 3b2a41c817dff1d4699f26746ede3ed9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 202059058}
-    - targetCorrespondingSourceObject: {fileID: 1235191789787150589, guid: 3b2a41c817dff1d4699f26746ede3ed9,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 501216800}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3b2a41c817dff1d4699f26746ede3ed9, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
