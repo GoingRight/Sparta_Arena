@@ -4,11 +4,10 @@ using UnityEngine;
 
 public abstract class Character : MonoBehaviour
 {
-    [Header("Status")]
-    [SerializeField] public Status stat;
+    public Status stat;
 
     protected virtual void TakeDamage(float damage)
     {
-        
+        stat.CurrentHP = Mathf.Clamp(stat.CurrentHP - damage, 0, stat.MaxHP);
     }
 }
