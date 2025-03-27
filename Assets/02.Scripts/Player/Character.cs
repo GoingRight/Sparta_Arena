@@ -8,6 +8,6 @@ public abstract class Character : MonoBehaviour
 
     protected virtual void TakeDamage(float damage)
     {
-        stat.CurrentHP = Mathf.Clamp(stat.CurrentHP - damage, 0, stat.MaxHP);
+        stat.CurrentHP = Mathf.Max(stat.CurrentHP - damage, 0);
     }
 }

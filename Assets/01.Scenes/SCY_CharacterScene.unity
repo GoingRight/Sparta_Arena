@@ -546,8 +546,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 935892693}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.08527978, y: 0.099065624, z: -0.008521506, w: -0.99138325}
-  m_LocalPosition: {x: 0.98277265, y: 2.8524868, z: -3.901139}
+  m_LocalRotation: {x: 0.095552616, y: -0.11174531, z: 0.010789922, w: 0.98907346}
+  m_LocalPosition: {x: 0.57846594, y: 1.9815834, z: -1.4517117}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4984,6 +4984,18 @@ MonoBehaviour:
     maxHP: 100
     currentHP: 100
     speed: 3
+  <animationData>k__BackingField:
+    groundParameterName: '@Ground'
+    idleParameterName: Idle
+    walkParameterName: Walk
+    runParameterName: Run
+    airParameterName: '@Air'
+    jumpParameterName: Jump
+    fallParameterName: Fall
+    attackParameterName: '@Attack'
+    comboAttackParameterName: ComboAttack
+  <Data>k__BackingField: {fileID: 11400000, guid: ac287662f1b00114f87ac767d8dc59af,
+    type: 2}
 --- !u!114 &7072126937293801524
 MonoBehaviour:
   m_ObjectHideFlags: 0
