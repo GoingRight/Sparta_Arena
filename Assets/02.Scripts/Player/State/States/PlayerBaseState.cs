@@ -10,41 +10,42 @@ public class PlayerBaseState : IState
     public PlayerBaseState(PlayerStateMachine stateMachine)
     {
         this.stateMachine = stateMachine;
-        groundData = stateMachine.player.Data.GroundData;
+        groundData = stateMachine.Player.Data.GroundData;
     }
 
-    public void Enter()
+    public virtual void Enter()
     {
 
     }
 
-    public void Exit()
+    public virtual void Exit()
+    {
+        
+    }
+
+    public virtual void HandleInput()
+    {
+        stateMachine.PlayerController.ReturnMoveInput();
+        Debug.Log("PlayerBaseState HandleInput");
+    }
+
+    public virtual void PhysicsUpdate()
     {
 
     }
 
-    public void HandleInput()
-    {
-
-    }
-
-    public void PhysicsUpdate()
-    {
-
-    }
-
-    public void Update()
+    public virtual void Update()
     {
 
     }
 
     protected void StartAnimation(int animatorHash)
     {
-        stateMachine.player.animator.SetBool(animatorHash, true);
+        stateMachine.Player.animator.SetBool(animatorHash, true);
     }
 
     protected void StopAnimation(int animatorHash)
     {
-        stateMachine.player.animator.SetBool(animatorHash, false);
+        stateMachine.Player.animator.SetBool(animatorHash, false);
     }
 }

@@ -39,6 +39,6 @@ public class PlayerAnimationData
         comboAttackParameterHash = Animator.StringToHash(comboAttackParameterName);
 
         Animator anim = new Animator();
-        anim.SetBool(GroundParameterHash, true);
+        //anim.SetBool(GroundParameterHash, true);
     }
 }

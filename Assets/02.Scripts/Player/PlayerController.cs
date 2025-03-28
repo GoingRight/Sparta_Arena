@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,7 +7,7 @@ public class PlayerController : MonoBehaviour
     [Header("Move")]
     private Player player;
     public float speed;
-    private Vector2 curMoveInput;
+    internal Vector2 curMoveInput;
     private Rigidbody _rigidbody;
     private bool isSprint;
 
@@ -25,7 +26,7 @@ public class PlayerController : MonoBehaviour
     {
         // Move
         _rigidbody = GetComponent<Rigidbody>();
-        player = GetComponent<Player>();
+        player = GetComponent<Player>() ?? throw new System.NullReferenceException($"player 클래스를 가지지 않음 : {this.gameObject.name}");
 
         // Look
         lookSpeed = 0.3f;
@@ -45,10 +46,15 @@ public class PlayerController : MonoBehaviour
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (context.phase== InputActionPhase.Performed)
+        if (context.phase == InputActionPhase.Performed)
             curMoveInput = context.ReadValue<Vector2>();
-        else if (context.phase== InputActionPhase.Canceled)
+        else if (context.phase == InputActionPhase.Canceled)
             curMoveInput = Vector2.zero;
+    }
+
+    public Vector2 ReturnMoveInput()
+    {
+        return curMoveInput;
     }
 
     private void Move()

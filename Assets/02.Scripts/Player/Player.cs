@@ -17,11 +17,12 @@ public class Player : Character
     private void Awake()
     {
         animationData.Initialize();
-        animator = GetComponent<Animator>();
+        animator = GetComponentInChildren<Animator>();
         input = GetComponent<PlayerController>();
         controller = GetComponent<Rigidbody>();
 
         stateMachine = new PlayerStateMachine(this);
+        stateMachine.ChangeState(stateMachine.IdleState);
     }
 
     private void Update()
