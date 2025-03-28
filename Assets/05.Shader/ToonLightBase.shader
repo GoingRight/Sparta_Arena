@@ -25,7 +25,11 @@ Shader "Custom/ToonLightBase"
     }
     SubShader
     {
-        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" }
+        Tags 
+        { 
+            "RenderType" = "Opaque" 
+            "RenderPipeline" = "UniversalPipeline" 
+        }
         
         Pass
         {
@@ -143,8 +147,8 @@ Shader "Custom/ToonLightBase"
                 float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
 
                 // return NH;
-               float specularNH = smoothstep((1-_SpecularStep * 0.05)  - _SpecularStepSmooth * 0.05, (1-_SpecularStep* 0.05)  + _SpecularStepSmooth * 0.05, NH) ;
-               float shadowNL = smoothstep(_ShadowStep - _ShadowStepSmooth, _ShadowStep + _ShadowStepSmooth, NL);
+                float specularNH = smoothstep((1-_SpecularStep * 0.05)  - _SpecularStepSmooth * 0.05, (1-_SpecularStep* 0.05)  + _SpecularStepSmooth * 0.05, NH) ;
+                float shadowNL = smoothstep(_ShadowStep - _ShadowStepSmooth, _ShadowStep + _ShadowStepSmooth, NL);
 
 				input.shadowCoord = TransformWorldToShadowCoord(input.positionWS);
                 
@@ -210,6 +214,24 @@ Shader "Custom/ToonLightBase"
 
                 return o;
             }
+
+            // v2f vert(appdata v)
+            // {
+            //     v2f o;
+        
+            //     float3 worldNormal = TransformObjectToWorldNormal(v.normal);
+            //     float3 worldPos = TransformObjectToWorld(v.vertex.xyz);
+        
+            //     // 카메라 기준으로 외곽 방향 밀어내기
+            //     float3 viewDir = normalize(worldPos - _WorldSpaceCameraPos);
+            //     float3 outlineDir = normalize(cross(worldNormal, cross(viewDir, worldNormal)));
+        
+            //     float3 pushedPos = worldPos + outlineDir * _OutlineWidth;
+            //     o.pos = TransformWorldToHClip(pushedPos);
+            //     o.fogCoord = ComputeFogFactor(o.pos.z);
+        
+            //     return o;
+            // }
 
             float4 frag(v2f i) : SV_Target
             {
