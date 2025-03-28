@@ -23,6 +23,8 @@ public class EnemyCar : EnemyBoss
 
     private void Start()
     {
+        //player = GameManager.Instance.player;
+        FindPlayer();
         dashCoroutine = StartCoroutine(DashCo());
     }
     private void Update()
@@ -43,11 +45,7 @@ public class EnemyCar : EnemyBoss
             bossPhase = 2;
         }
     }
-
-    protected override void Move()
-    {
-
-    }
+    protected override void Move() { }
 
     protected override void Attack()
     {
@@ -56,7 +54,7 @@ public class EnemyCar : EnemyBoss
 
     protected override void FindPlayer()
     {
-
+        curPlayerPosition = player.transform.position;
     }
 
     private IEnumerator FlashCo()
@@ -101,4 +99,6 @@ public class EnemyCar : EnemyBoss
             yield return null;
         }
     }
+
+
 }
