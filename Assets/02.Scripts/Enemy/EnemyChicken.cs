@@ -6,30 +6,39 @@ using UnityEngine;
 public class EnemyChicken : EnemyBoss
 {
     [Header("Detection Settings")]
-    [SerializeField] private float detectRange = 5f;
-    [SerializeField] private float attackRange = 1f;
+    [SerializeField] private float detectRange = 5f; // 인식 범위
+    [SerializeField] private float attackRange = 1f; // 공격 범위
     
     [Header("Attack Settings")]
-    [SerializeField] private float rushSpeed = 5f;
-    [SerializeField] private float rushDuration = 0.5f;
-    [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private float projectileSpeed = 8f;
-    [SerializeField] private float projectileDamage = 5f;
-    [SerializeField] private float phase2AttackInterval = 2f; // Phase 2에서의 공격 간격
+    [SerializeField] private float rushSpeed = 3f; // 달리기 속도
+    [SerializeField] private float rushDuration = 0.5f; // 지속 시간
+    // [SerializeField] private GameObject projectilePrefab; // 알 프리팹
+    // [SerializeField] private float projectileSpeed = 8f; // 투사체 속도
+    // [SerializeField] private float projectileDamage = 5f; // 투사체 대미지
+    // [SerializeField] private float phase2AttackInterval = 2f; // Phase 2에서의 공격 간격
     
-    private bool isChasing = false;
-    private float randomMoveTimer = 0f;
-    private float randomMoveInterval = 2f;
-    private Vector3 randomDirection;
-    private Transform player;
-    private float phase2AttackTimer = 0f;
-    private bool isPhase2RushComplete = false;
+    private bool isChasing = false; // 움직임 여부
+    private float randomMoveTimer = 0f; // 움직임 시간 초기화
+    private float randomMoveInterval = 2f; // 움직임 시간 간격
+    private Vector3 randomDirection; // 무작위 방향
+    private Transform player; // 플레이어 위치
+    private float phase2AttackTimer = 0f; // 공격 시간 초기화
+    private bool isPhase2RushComplete = false; // 페이즈 전환
+
+    private Animator Animator;
 
     private void Start()
     {
         bossPhase = 1;
         randomDirection = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)).normalized;
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        Animator = GetComponent<Animator>();
+    }
+
+    private void Update()
+    {
+        Move();
+        FindPlayer();
     }
 
     protected override void Attack()
@@ -41,24 +50,24 @@ public class EnemyChicken : EnemyBoss
             {
                 StartCoroutine(ChickenRushAttack());
             }
-            else if (bossPhase == 2)
-            {
-                phase2AttackTimer += Time.deltaTime;
-                if (phase2AttackTimer >= phase2AttackInterval)
-                {
-                    if (!isPhase2RushComplete)
-                    {
-                        StartCoroutine(ChickenRushAttack());
-                        isPhase2RushComplete = true;
-                    }
-                    else
-                    {
-                        StartCoroutine(ChickenProjectileAttack());
-                        isPhase2RushComplete = false;
-                    }
-                    phase2AttackTimer = 0f;
-                }
-            }
+            // else if (bossPhase == 2)
+            // {
+            //     phase2AttackTimer += Time.deltaTime;
+            //     if (phase2AttackTimer >= phase2AttackInterval)
+            //     {
+            //         if (!isPhase2RushComplete)
+            //         {
+            //             StartCoroutine(ChickenRushAttack());
+            //             isPhase2RushComplete = true;
+            //         }
+            //         else
+            //         {
+            //             StartCoroutine(ChickenProjectileAttack());
+            //             isPhase2RushComplete = false;
+            //         }
+            //         phase2AttackTimer = 0f;
+            //     }
+            // }
         }
     }
 
@@ -147,13 +156,13 @@ public class EnemyChicken : EnemyBoss
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 20f * Time.deltaTime);
         }
 
-        GameObject projectile = Instantiate(projectilePrefab, transform.position + direction * 1f, Quaternion.LookRotation(direction));
-        Rigidbody rb = projectile.GetComponent<Rigidbody>();
+        // GameObject projectile = Instantiate(projectilePrefab, transform.position + direction * 1f, Quaternion.LookRotation(direction));
+        // Rigidbody rb = projectile.GetComponent<Rigidbody>();
         
-        if (rb != null)
-        {
-            rb.velocity = direction * projectileSpeed;
-        }
+        // if (rb != null)
+        // {
+        //     rb.velocity = direction * projectileSpeed;
+        // }
 
         yield return new WaitForSeconds(1f);
     }
