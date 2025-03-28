@@ -23,7 +23,7 @@ public class EnemyCar : EnemyBoss
 
     private void Start()
     {
-        //player = GameManager.Instance.player;
+        player = GameManager.instance.player;
         FindPlayer();
         dashCoroutine = StartCoroutine(DashCo());
     }

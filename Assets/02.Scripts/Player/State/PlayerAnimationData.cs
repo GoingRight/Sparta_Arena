@@ -37,8 +37,5 @@ public class PlayerAnimationData
         fallParameterHash = Animator.StringToHash(fallParameterName);
         attackParameterHash = Animator.StringToHash(attackParameterName);
         comboAttackParameterHash = Animator.StringToHash(comboAttackParameterName);
-
-        Animator anim = new Animator();
-        anim.SetBool(GroundParameterHash, true);
     }
 }

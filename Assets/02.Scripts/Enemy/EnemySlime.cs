@@ -14,8 +14,9 @@ public class EnemySlime : EnemyMob
     private float lastAtkTime = 0;
     private Animator animator;
     private Rigidbody _rb;
+    private Vector3 targetDir;
 
-    private bool isMove;
+    private bool isMove = false;
     public bool IsMove
     {
         get { return isMove; }
@@ -35,8 +36,8 @@ public class EnemySlime : EnemyMob
 
     private void Awake()
     {
-        animator = GetComponent<Animator>();
-        _rb = GetComponent<Rigidbody>();
+        animator = GetComponentInChildren<Animator>();
+        _rb = GetComponentInChildren<Rigidbody>();
         SlimeAnimationData = new SlimeAnimationData();
         SlimeAnimationData.Initialize();
         lastAtkTime = 0;
@@ -44,9 +45,9 @@ public class EnemySlime : EnemyMob
 
     private void Start()
     {
-        //player = GameManager.Instance.player;
+        player = GameManager.instance.player;
         IsMove = true;
-        InvokeRepeating("CallDuplicate", 10f, duplicateRate);
+        InvokeRepeating("CallDuplicate", 5f, duplicateRate);
     }
 
     private void Update()
@@ -63,10 +64,17 @@ public class EnemySlime : EnemyMob
     protected override void FindPlayer()
     {
         curPlayerPosition = player.transform.position;
+        Vector3 distance = curPlayerPosition - transform.position;
+        distance.y = 0;
+        targetDir = distance.normalized;
         lastAtkTime += Time.deltaTime;
-        if ((curPlayerPosition - transform.position).magnitude <= atkDistance && lastAtkTime < 1.5f)
+        if (distance.magnitude <= atkDistance)
         {
-            Attack();
+            IsMove = false;
+            if(lastAtkTime >= 1.5f)
+            {
+                Attack();
+            }
         }
     }
 
@@ -85,13 +93,14 @@ public class EnemySlime : EnemyMob
 
     protected override void Move()
     {
+        float originY = _rb.velocity.y;
         if (animator.GetBool(SlimeAnimationData.MoveParameterHash))
         {
-            _rb.velocity = Vector3.forward * stat.Speed;
+            _rb.velocity = new Vector3(targetDir.x*stat.Speed, originY, targetDir.z * stat.Speed);
         }
         else
         {
-            _rb.velocity = Vector3.zero;
+            _rb.velocity = new Vector3(0,originY, 0);
         }
     }
 
@@ -104,25 +113,26 @@ public class EnemySlime : EnemyMob
     {
         if (animator.GetBool(SlimeAnimationData.MoveParameterHash))
         {
-            transform.rotation = Quaternion.LookRotation(curPlayerPosition - transform.position);
+
+            transform.rotation = Quaternion.LookRotation(targetDir);
         }
         else
         {
-            transform.rotation = Quaternion.identity;
+            return;
         }
 
     }
 
     private void CallDuplicate()
     {
-        IsMove = false;
         animator.SetTrigger(SlimeAnimationData.ReplicateParameterHash);
+        IsMove = false;
     }
 
     public void Duplicate()
     {
         EnemySlime replica = Instantiate(this.gameObject).GetComponent<EnemySlime>();
-        replica.transform.position = transform.position + Vector3.right;
+        replica.transform.position = transform.position + Vector3.up;
         replica.stat = this.stat;
     }
 }
