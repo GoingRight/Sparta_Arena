@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerBaseState : IState
 {
@@ -26,7 +27,6 @@ public class PlayerBaseState : IState
     public virtual void HandleInput()
     {
         stateMachine.PlayerController.ReturnMoveInput();
-        Debug.Log("PlayerBaseState HandleInput");
     }
 
     public virtual void PhysicsUpdate()
@@ -48,4 +48,8 @@ public class PlayerBaseState : IState
     {
         stateMachine.Player.animator.SetBool(animatorHash, false);
     }
+
+    protected virtual void OnMoveCancled(InputAction.CallbackContext context) { }
+
+    protected virtual void OnRunStarted(InputAction.CallbackContext context) { }
 }

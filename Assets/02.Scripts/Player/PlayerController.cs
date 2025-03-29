@@ -9,7 +9,7 @@ public class PlayerController : MonoBehaviour
     public float speed;
     internal Vector2 curMoveInput;
     private Rigidbody _rigidbody;
-    private bool isSprint;
+    internal bool isSprint;
 
     [Header("Look")]
     private Vector2 curLookInput;
