@@ -132,7 +132,7 @@ public class EnemySlime : EnemyMob
     public void Duplicate()
     {
         EnemySlime replica = Instantiate(this.gameObject).GetComponent<EnemySlime>();
-        replica.transform.position = transform.position + Vector3.up;
+        replica.transform.position = transform.position + transform.right*2;
         replica.stat = this.stat;
     }
 }
