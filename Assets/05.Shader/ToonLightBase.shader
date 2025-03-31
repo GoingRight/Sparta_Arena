@@ -25,7 +25,11 @@ Shader "Custom/ToonLightBase"
     }
     SubShader
     {
-        Tags { "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" }
+        Tags 
+        { 
+            "RenderType" = "Opaque" 
+            "RenderPipeline" = "UniversalPipeline" 
+        }
         
         Pass
         {
@@ -143,8 +147,8 @@ Shader "Custom/ToonLightBase"
                 float4 baseMap = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv);
 
                 // return NH;
-               float specularNH = smoothstep((1-_SpecularStep * 0.05)  - _SpecularStepSmooth * 0.05, (1-_SpecularStep* 0.05)  + _SpecularStepSmooth * 0.05, NH) ;
-               float shadowNL = smoothstep(_ShadowStep - _ShadowStepSmooth, _ShadowStep + _ShadowStepSmooth, NL);
+                float specularNH = smoothstep((1-_SpecularStep * 0.05)  - _SpecularStepSmooth * 0.05, (1-_SpecularStep* 0.05)  + _SpecularStepSmooth * 0.05, NH) ;
+                float shadowNL = smoothstep(_ShadowStep - _ShadowStepSmooth, _ShadowStep + _ShadowStepSmooth, NL);
 
 				input.shadowCoord = TransformWorldToShadowCoord(input.positionWS);
                 
