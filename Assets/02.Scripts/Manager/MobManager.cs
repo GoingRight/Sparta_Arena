@@ -1,48 +1,33 @@
+using Akasha;
 using UnityEngine;
-using System.Collections.Generic;
 using System.Linq;
 
-public struct MobGroupStatus
+public class MobManager : Manager<MobManager>
 {
-    public float AvgHealth;
-    public int AllyCount;
-    public bool UnderAttack;
-}
-
-public class MobManager : MonoBehaviour
-{
-    public static MobManager Instance { get; private set; }
-
     public PlayerController player;
     public Vector3 PlayerPosition => player != null ? player.transform.position : Vector3.zero;
 
-    public List<Mankind> allMobs = new();
-    public MobGroupStatus CurrentStatus { get; private set; }
+    public RxList<RxModel> AllMobs { get; private set; }
+    public MobGroupStatusModel GroupStatus { get; private set; }
 
     private float underAttackTimer = 0f;
     private const float underAttackDuration = 3f;
 
-    private void Awake()
+    protected override void OnSetup()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-
-        if (player == null)
-            player = FindObjectOfType<PlayerController>();
+        AllMobs = new RxList<RxModel>();
+        GroupStatus = new MobGroupStatusModel();
+        GroupStatus.Setup(this);
     }
 
-    public void RegisterMob(Mankind mob)
+    protected override void OnManagerInitialized()
     {
-        if (!allMobs.Contains(mob))
-        {
-            allMobs.Add(mob);
-            mob.Manager = this;
-        }
+        RxTimer.Every(0.1f, this, RecalculateGroupStatus);
+    }
+
+    public void Register(RxModel mobModel)
+    {
+        AllMobs.Add(mobModel);
     }
 
     public void NotifyUnderAttack()
@@ -50,34 +35,51 @@ public class MobManager : MonoBehaviour
         underAttackTimer = underAttackDuration;
     }
 
-    private void FixedUpdate()
+    private void RecalculateGroupStatus()
     {
         if (underAttackTimer > 0f)
-            underAttackTimer -= Time.fixedDeltaTime;
+            underAttackTimer -= Time.deltaTime;
 
-        RecalculateStatus();
+        var models = AllMobs.Value;
+        int count = models.Count;
+
+        if (count == 0)
+        {
+            GroupStatus.UpdateStatus(1f, 0, false); // 기본 상태
+            return;
+        }
+
+        // MobModel들이 IMobHealthReadable을 구현했다고 가정
+        float totalRatio = models
+            .OfType<IMobHealthReadable>()
+            .Sum(m => m.HealthRatio);
+
+        GroupStatus.UpdateStatus(
+            totalRatio / count,
+            count,
+            underAttackTimer > 0f
+        );
+    }
+}
+public class MobGroupStatusModel : RxModel
+{
+    public RxVar<float> AvgHealth { get; private set; }
+    public RxVar<int> AllyCount { get; private set; }
+    public RxVar<bool> UnderAttack { get; private set; }
+
+    public void Setup(object owner)
+    {
+        SetReactiveOwner(owner);
+
+        AvgHealth = new RxVar<float>(1f, this);
+        AllyCount = new RxVar<int>(0, this);
+        UnderAttack = new RxVar<bool>(false, this);
     }
 
-    private void RecalculateStatus()
+    public void UpdateStatus(float avgHealth, int allyCount, bool underAttack)
     {
-        int count = allMobs.Count;
-        if (count == 0) return;
-
-        float totalHealth = allMobs.Sum(m => m.GetHealthRatio());
-
-        CurrentStatus = new MobGroupStatus
-        {
-            AvgHealth = totalHealth / count,
-            AllyCount = count,
-            UnderAttack = underAttackTimer > 0f
-        };
-
-        foreach (var mob in allMobs)
-        {
-            if (mob is AndroidMob android)
-            {
-                android.ReceiveGroupStatus(CurrentStatus);
-            }
-        }
+        AvgHealth.SetValue(avgHealth, this);
+        AllyCount.SetValue(allyCount, this);
+        UnderAttack.SetValue(underAttack, this);
     }
 }
