@@ -34,58 +34,14 @@ public class SmoothNoramlBaker : MonoBehaviour
 
         // 버텍스 그룹화
         VertexGrp(vertices, ref vertexGroup);
-        //for (int i = 0; i < vertices.Length; i++)
-        //{
-        //    Vector3 key = RoundVec3(vertices[i], 0.0001f); // 정밀도 조정
-        //    if (!vertexGroup.ContainsKey(key))
-        //    {
-        //        vertexGroup[key] = new List<int>();
-        //    }
-        //    vertexGroup[key].Add(i);
-        //}
 
         // 노말 평균 찾기
         Vector3[] smoothNormals = FindNormalAVG(meshInst, vertexGroup);
-        //Vector3[] smoothNormals = new Vector3[vertices.Length];
-        //foreach (var grp in vertexGroup.Values)
-        //{
-        //    Vector3 avg = Vector3.zero;
-        //    foreach (int i in grp)
-        //    {
-        //        avg += normals[i];
-        //    }
-        //    avg.Normalize();
-        //    //Debug.Log($"{grp} : {avg}");
-
-        //    foreach (int i in grp)
-        //    {
-        //        smoothNormals[i] = avg;
-        //    }    
-        //}
 
         meshInst.normals = smoothNormals;
         originMesh.normals = smoothNormals;
         meshInst.SetUVs(1, new List<Vector3>(smoothNormals));
         smr.sharedMesh = meshInst;
-
-        //List<Vector3> origin_uv1 = new List<Vector3>(smoothNormals);
-        //mesh.GetUVs(1, origin_uv1);
-
-        //// UV1에 노말 평균 저장
-        //List<Vector3> uv1 = new List<Vector3>(smoothNormals);
-        //mesh.SetUVs(1, uv1);
-
-        //if (!true) // Debug
-        //{
-
-        //    for (int i = 0; i < 5;  i++)
-        //    {
-        //        Vector3 oldUV = (i < origin_uv1.Count) ? origin_uv1[i] : Vector3.zero;
-        //        Vector3 newUV = smoothNormals[i];
-
-        //        Debug.Log($"[UV1 Debug] Vertex {i} - Original: {oldUV}, New: {newUV}");
-        //    }
-        //}
     }
 
     /// <summary>
@@ -128,7 +84,6 @@ public class SmoothNoramlBaker : MonoBehaviour
                 avg += normals[i];
             }
             avg.Normalize();
-            //Debug.Log($"{grp} : {avg}");
 
             foreach (int i in grp)
             {
