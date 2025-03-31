@@ -1,4 +1,4 @@
-Shader "Custom/ToonLightBase"
+Shader "Custom/ToonLightBase_HardEdge"
 {
     Properties
     {
@@ -182,35 +182,56 @@ Shader "Custom/ToonLightBase"
             Tags
             {
                 "LightMode" = "SRPDefaultUnlit"
+                "RenderType" = "Opaque"
             }
+
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
             #pragma multi_compile_fog
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             
-            struct appdata
-            {
-                float4 vertex : POSITION;
-                float3 normal : NORMAL;
-                float4 tangent : TANGENT;
+            struct appdata_full {
+                float4 vertex   : POSITION;
+                float4 tangent  : TANGENT;
+                float3 normal   : NORMAL;
+                float4 texcoord : TEXCOORD0;
+                float4 texcoord1: TEXCOORD1;
+                float4 texcoord2: TEXCOORD2;
+                float4 texcoord3: TEXCOORD3;
+                float4 color    : COLOR;
             };
 
             struct v2f
             {
                 float4 pos      : SV_POSITION;
-                float4 fogCoord	: TEXCOORD0;	
+                float4 fogCoord	: TEXCOORD0;
+                	
             };
             
             float _OutlineWidth;
             float4 _OutlineColor;
             
-            v2f vert(appdata v)
+            v2f vert(appdata_full v)
             {
                 v2f o;
-                VertexPositionInputs vertexInput = GetVertexPositionInputs(v.vertex.xyz);
                 o.pos = TransformObjectToHClip(float4(v.vertex.xyz + v.normal * _OutlineWidth * 0.1 ,1));
-                o.fogCoord = ComputeFogFactor(vertexInput.positionCS.z);
+
+
+
+                // VertexPositionInputs vertexInput = GetVertexPositionInputs(v.vertex.xyz);
+                // o.pos = TransformObjectToHClip(float4(v.vertex.xyz + v.normal * _OutlineWidth * 0.1 ,1));
+                // o.fogCoord = ComputeFogFactor(vertexInput.positionCS.z);
+
+                // 부드러운 노멀을 월드 공간으로 변환해서 extrusion 방향으로 사용
+                // float3 worldNormal = normalize(mul((float3x3)unity_ObjectToWorld, v.normal));
+                // float3 worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+                // float3 extrudedPos = worldPos + worldNormal * _OutlineWidth;
+
+                //o.pos = TransformWorldToHClip(float4(extrudedPos, 1.0));
+                o.fogCoord = ComputeFogFactor(o.pos.z);
+
+                
 
                 return o;
             }
