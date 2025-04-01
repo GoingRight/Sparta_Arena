@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using Akasha;
 
 namespace Akasha
 {
-    public abstract class RxModel : IRxModelOwner
+    public abstract class RxModel : IRxModel, IFunctionalSubscriber
     {
         public object? ReactiveOwner { get; private set; }
 

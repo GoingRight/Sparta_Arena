@@ -94,7 +94,7 @@ namespace Akasha
 
         private static bool IsValidOwner(object owner)
         {
-            return owner is IRxFlagger or IScreen or IRxUnsafe or IManager or IRxModelOwner;
+            return owner is IRxStateMachine or IScreen or IRxUnsafe or IManager or IRxModel;
         }
     }
 }

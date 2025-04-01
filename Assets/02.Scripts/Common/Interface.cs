@@ -23,3 +23,14 @@ public enum FormationRole
     Fighter,
     Supporter
 }
+public enum MobState
+{
+    Idle,
+    Walk,
+    Run,
+    Act1,
+    Act2,
+    Act3,
+    Hit,
+    Dead
+}

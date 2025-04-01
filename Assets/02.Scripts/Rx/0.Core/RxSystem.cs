@@ -62,7 +62,8 @@ namespace Akasha
 
     // ----- Ownership Marker Interfaces -----
 
-    public interface IRxModelOwner { }
+    public interface IRxModel { }
+    public interface IRxStateMachine { }
     public interface IRxFlagger { }
     public interface IScreen { }
     public interface IRxUnsafe { }

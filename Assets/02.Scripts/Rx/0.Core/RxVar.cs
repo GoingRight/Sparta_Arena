@@ -40,7 +40,7 @@ namespace Akasha
 
         private bool IsAuthorized(object caller)
         {
-            return caller == _owner || caller is IRxModelOwner;
+            return caller == _owner || caller is IRxModel;
         }
 
         public void SubscribeLaw(Action<T> subscriber, object context, RxType relationType)
