@@ -19,6 +19,8 @@ public class PlayerController : MonoBehaviour
     [Header("Jump")]
     private float jumpForce;
     public Action jumpTrigger;
+    public bool isGrounded;
+    public LayerMask groundMask;
 
     private void Awake()
     {
@@ -34,6 +36,7 @@ public class PlayerController : MonoBehaviour
     {
         Move();
         RotateCharacterModel();
+        isGrounded = Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z), Vector3.down, 1.5f, groundMask);
     }
 
     public void OnMove(InputAction.CallbackContext context)
@@ -95,10 +98,11 @@ public class PlayerController : MonoBehaviour
 
     public void OnJump(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Started)
+        if (context.phase == InputActionPhase.Started && isGrounded)
         {
             _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             jumpTrigger?.Invoke();
+            Debug.Log("Jump");
         }
     }
 

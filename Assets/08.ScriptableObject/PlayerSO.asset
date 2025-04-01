@@ -15,4 +15,4 @@ MonoBehaviour:
   <GroundData>k__BackingField:
     <BaseRotationDamping>k__BackingField: 1
   <AirData>k__BackingField:
-    <JumpForce>k__BackingField: 5
+    <JumpForce>k__BackingField: 500

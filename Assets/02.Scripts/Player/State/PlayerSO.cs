@@ -11,7 +11,7 @@ public class PlayerGroundData
 public class PlayerAirData
 {
     [field: Header("JumpData")]
-    [field: SerializeField][field: Range(0f, 25f)] public float JumpForce { get; private set; } = 5f;
+    [field: SerializeField][field: Range(100f, 2000f)] public float JumpForce { get; private set; } = 500f;
 }
 
 [CreateAssetMenu(fileName = "PlayerSO", menuName = "Characters/Player", order = 1)]

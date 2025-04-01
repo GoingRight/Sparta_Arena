@@ -444,12 +444,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &647756003 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7986829810286347921, guid: fe76244bba085e140895f4997070edee,
-    type: 3}
-  m_PrefabInstance: {fileID: 5840283108212275122}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &832845701
 GameObject:
   m_ObjectHideFlags: 0
@@ -575,7 +569,7 @@ GameObject:
   - component: {fileID: 1089514380}
   - component: {fileID: 1089514379}
   - component: {fileID: 1089514378}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1015,9 +1009,9 @@ PrefabInstance:
       objectReference: {fileID: 2146188582}
     - target: {fileID: 2504818381337907381, guid: fe76244bba085e140895f4997070edee,
         type: 3}
-      propertyPath: characterModel
-      value: 
-      objectReference: {fileID: 647756003}
+      propertyPath: groundMask.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
     - target: {fileID: 2801987545414025946, guid: fe76244bba085e140895f4997070edee,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1069,8 +1063,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 8208530688301379128, guid: fe76244bba085e140895f4997070edee, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe76244bba085e140895f4997070edee, type: 3}
