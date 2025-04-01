@@ -24,7 +24,7 @@ public class PlayerFallState : PlayerAirState
 
         if (stateMachine.PlayerController.isGrounded)
         {
-            stateMachine.ChangeState(stateMachine.IdleState);
+            stateMachine.ChangeState(stateMachine.IdleState);   
             return;
         }
     }
