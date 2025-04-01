@@ -10,7 +10,8 @@ public class EnemyChicken : EnemyBoss
         Idle,
         Moving,
         Chasing,
-        Attacking
+        Attacking,
+        Dead
     }
     #endregion
 
@@ -21,7 +22,7 @@ public class EnemyChicken : EnemyBoss
 
     [Header("이동")]
     [SerializeField] private float rotateSpeed = 5f; // 회전 속도
-    [SerializeField] private float chaseSpeed = 1.5f; // 추적 속도
+    [SerializeField] private float chaseSpeed = 1.5f; // 추적 속도 배율
     [SerializeField] private float minMoveDistance = 1f; // 최소 이동 범위
     [SerializeField] private float maxMoveDistance = 7f; // 최대 이동 범위
     [SerializeField] private float minIdleTime = 2f; // 최소 Idle 시간
@@ -34,6 +35,9 @@ public class EnemyChicken : EnemyBoss
     [Header("2페이즈")]
     [SerializeField] private float phase2Speed = 1.5f; // 2페이즈 속도 배수
     [SerializeField] private float phase2Damage = 1.5f; // 2페이즈 공격 배수
+
+    [Header("보스 여부")]
+    [SerializeField] private bool isBoss = false; // 보스 확인
     #endregion
 
     #region Private Variables
@@ -57,11 +61,12 @@ public class EnemyChicken : EnemyBoss
     {
         InitializeComponents();
         SetInitialState();
+        IsBossCheck();
     }
 
     private void Update()
     {
-        if (player == null) return;
+        if (player == null || currentState == EnemyState.Dead) return;
 
         UpdateTimers();
         FindPlayer();
@@ -82,6 +87,20 @@ public class EnemyChicken : EnemyBoss
     {
         SetNextMoveTime();
         RandomDestination();
+    }
+    private void IsBossCheck() // 보스일 시 스펙 증가
+    {
+        if (isBoss)
+        {
+            detectRange *= 2.5f;
+            attackRange += 0.5f;
+            transform.localScale *= 4f;
+            stat.Attack *= 5f;
+            stat.Speed *= 3f;
+            baseSpeed = stat.Speed;
+            stat.MaxHP *= 10f;
+            stat.CurrentHP = stat.MaxHP;
+        }
     }
     #endregion
 
@@ -254,10 +273,10 @@ public class EnemyChicken : EnemyBoss
     {
         if (currentState == EnemyState.Attacking || !canAttack) return; // 중복 공격 방지
 
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position); // 공격 거리 계산
-        if (distanceToPlayer > attackRange) return; // 거리 초과 시 종료
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        if (distanceToPlayer > attackRange) return;
 
-        Vector3 direction = (player.position - transform.position).normalized; // 방향 계산
+        Vector3 direction = (player.position - transform.position).normalized;
         direction.y = 0f;
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
@@ -275,7 +294,7 @@ public class EnemyChicken : EnemyBoss
         animController.TriggerAttack();
     }
 
-    private void CheckAndEnterPhase2() // 페이즈 전환 여부
+    private void CheckAndEnterPhase2() // 2페이즈 확인
     {
         if (bossPhase == 1 && stat.CurrentHP <= stat.MaxHP * 0.5f)
         {
@@ -289,6 +308,27 @@ public class EnemyChicken : EnemyBoss
         stat.Speed *= phase2Speed;
         stat.Attack *= phase2Damage;
         baseSpeed = stat.Speed;
+    }
+
+    protected override void TakeDamage(float damage) // 데미지 받았을 시
+    {
+        if (currentState == EnemyState.Dead) return;
+
+        base.TakeDamage(damage);
+        animController.TriggerHit();
+
+        if (stat.CurrentHP <= 0)
+        {
+            Die();
+        }
+    }
+
+    private void Die() // 죽었을 시
+    {
+        currentState = EnemyState.Dead;
+        animController.SetDead(true);
+        // 콜라이더 비활성화
+        GetComponent<Collider>().enabled = false;
     }
     #endregion
 
@@ -310,12 +350,26 @@ public class EnemyChicken : EnemyBoss
     #endregion
 
     #region Animation Events
-    public void OnAttackAnimationComplete()
+    public void OnAttackAnimationComplete() // 공격 애니메이션 종료
     {
         currentState = EnemyState.Idle;
         animController.OnAttackAnimationComplete();
+        CheckUpdateState();
+    }
 
-        CheckUpdateState(); // 상태 체크 수행
+    public void OnAttackHitPoint() // 데미지 이벤트
+    {
+        if (player == null) return;
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        if (distanceToPlayer <= attackRange)
+        {
+            Player playerComponent = player.GetComponent<Player>();
+            if (playerComponent != null)
+            {
+                // playerComponent.TakeDamage(stat.Attack);
+            }
+        }
     }
     #endregion
 
@@ -336,7 +390,7 @@ public class EnemyChicken : EnemyBoss
             {
                 EnterChaseState();
             }
-            else if (!isDetected && wasDetected) // 아닐 시 배회
+            else if (!isDetected && wasDetected) // 배회
             {
                 ResetRoaming();
             }
