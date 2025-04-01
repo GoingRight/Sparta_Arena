@@ -1,4 +1,4 @@
-public class StateMachine
+public abstract class StateMachine
 {
     protected IState currentState;
 
