@@ -766,7 +766,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &763178654
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1042,7 +1042,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 844327235}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1700200096}
+        m_TargetAssemblyTypeName: MainSceneUI, Assembly-CSharp
+        m_MethodName: Restart
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &844327235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1910,6 +1922,7 @@ MonoBehaviour:
   bossNameTxt: {fileID: 690768876}
   bossHPBar: {fileID: 1770717603}
   gameOverPanel: {fileID: 763178655}
+  restartBtn: {fileID: 844327234}
 --- !u!1 &1732134248
 GameObject:
   m_ObjectHideFlags: 0

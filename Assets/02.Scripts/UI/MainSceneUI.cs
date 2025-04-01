@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainSceneUI : MonoBehaviour
@@ -12,6 +13,7 @@ public class MainSceneUI : MonoBehaviour
     public Image bossHPBar;
     public Image gameOverPanel;
 
+    public Button restartBtn;
     private void Start()
     {
         UIManager.Instance.mainUI = this;
@@ -35,5 +37,10 @@ public class MainSceneUI : MonoBehaviour
             return;
         }
         bossHPBar.fillAmount = GameManager.Instance.Boss.stat.CurrentHP / GameManager.Instance.Boss.stat.MaxHP;
+    }
+
+    public void Restart()
+    {
+        SceneManager.LoadScene("MainScene");
     }
 }
