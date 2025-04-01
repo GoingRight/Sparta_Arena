@@ -826,7 +826,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 63
+    m_Bits: 55
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
@@ -852,7 +852,12 @@ MonoBehaviour:
     maxHP: 200
     currentHP: 0
     speed: 20
+  ChargeSpeed: 5000
+  SpinSpeed: 100
   flashImage: {fileID: 8183514624762889314}
+  flashAngle: 60
+  myCol: {fileID: 0}
+  playerCol: {fileID: 0}
 --- !u!1 &6098134859796631787
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,12 +5,21 @@ using UnityEngine.UI;
 
 public class EnemyCar : EnemyBoss
 {
-    private Vector3 curPlayerPosition;
+    //플레이어 정보
     private Player player;
+    private Vector3 curPlayerPosition;
+    //이동 관련
     private Rigidbody _rb;
     private Coroutine dashCoroutine;
+    public float ChargeSpeed;
+    public float SpinSpeed;
+    //섬광 기믹 관련
     private Light[] lights;
     [SerializeField]private Image flashImage;
+    public float flashAngle;
+    //콜라이더
+    public Collider myCol;
+    public Collider playerCol;
 
     private void Awake()
     {
@@ -21,12 +30,15 @@ public class EnemyCar : EnemyBoss
         {
             light.intensity = 0;
         }
-        bossPhase = 2;
     }
 
     private void Start()
     {
         player = GameManager.instance.player;
+        myCol = GetComponentInChildren<Collider>();
+        playerCol = player.GetComponent<Collider>(); // 플레이어의 콜라이더 위치에 따라 GetComponentInChildren으로 바꿔야 할 수도 있음
+        Physics.IgnoreCollision(myCol, playerCol, true);
+
         FindPlayer();
         dashCoroutine = StartCoroutine(DashCo());
         flashImage.gameObject.SetActive(false);
@@ -68,7 +80,7 @@ public class EnemyCar : EnemyBoss
             light.intensity = 5;
         }
         if (Quaternion.Angle(player.transform.rotation,
-            Quaternion.LookRotation(transform.position - curPlayerPosition)) < 60f)//플레이어가 차를 바라보는 방향에서 60도 
+            Quaternion.LookRotation(transform.position - curPlayerPosition)) < flashAngle)//플레이어가 차를 바라보는 방향에서 60도 
         {
             Flash();
         }
@@ -101,12 +113,12 @@ public class EnemyCar : EnemyBoss
     private IEnumerator DashCo()
     {
         yield return StartCoroutine(RotateCo());
-        yield return new WaitForSeconds(2); //플레이어가 피할 시간을 줌
+        //yield return new WaitForSeconds(2); //플레이어가 피할 시간을 줌
         if (bossPhase == 2)
         {
             Attack();
         }
-        _rb.AddForce(transform.forward * 3500, ForceMode.Impulse);
+        _rb.AddForce(transform.forward * ChargeSpeed, ForceMode.Impulse);
         yield return new WaitForSeconds(2); //공격후 잠시 멈춰있음
         dashCoroutine = StartCoroutine(DashCo());
     }
@@ -119,10 +131,8 @@ public class EnemyCar : EnemyBoss
    
         while (transform.rotation != targetRotation)
         {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, 50 * Time.deltaTime); // 1초에 50도씩 회전
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, SpinSpeed * Time.deltaTime); // 1초에 SpinSpeed만큼 회전
             yield return null;
         }
     }
-
-
 }
