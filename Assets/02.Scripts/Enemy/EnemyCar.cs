@@ -23,6 +23,7 @@ public class EnemyCar : EnemyBoss
 
     private void Awake()
     {
+        stat.CurrentHP = stat.MaxHP;
         bossPhase = 1;
         _rb = GetComponent<Rigidbody>();
         lights = GetComponentsInChildren<Light>();
@@ -34,6 +35,7 @@ public class EnemyCar : EnemyBoss
 
     private void Start()
     {
+        GameManager.Instance.Boss = this;
         player = GameManager.Instance.player;
         myCol = GetComponentInChildren<Collider>();
         playerCol = player.GetComponent<Collider>(); // 플레이어의 콜라이더 위치에 따라 GetComponentInChildren으로 바꿔야 할 수도 있음
@@ -51,6 +53,7 @@ public class EnemyCar : EnemyBoss
     protected override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
+        UIManager.Instance.mainUI.SetBossHPBar();
         CheckHP();
     }
 
