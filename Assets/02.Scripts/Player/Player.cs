@@ -8,7 +8,7 @@ public class Player : Character
     [field: SerializeField] public PlayerAnimationData AnimationData { get; private set; }
     [field: SerializeField] public PlayerSO Data { get; private set; }
 
-    private PlayerStateMachine stateMachine;
+    protected internal PlayerStateMachine stateMachine;
 
     public Animator Animator { get; private set; }
     public PlayerController Input { get; private set; }

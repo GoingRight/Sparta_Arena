@@ -21,9 +21,22 @@ public class PlayerGroundState : PlayerBaseState
         StopAnimation(stateMachine.Player.AnimationData.GroundParameterHash);
     }
 
+    protected void OnJumpStarted()
+    {
+        stateMachine.ChangeState(stateMachine.JumpState);
+    }
+
     public override void Update()
     {
         base.Update();
+
+        if (stateMachine.isAttacking)
+            OnAttack();
+    }
+
+    void OnAttack()
+    {
+        stateMachine.ChangeState(stateMachine.ComboAttackState);
     }
 
     public override void PhysicsUpdate()
@@ -34,10 +47,5 @@ public class PlayerGroundState : PlayerBaseState
             stateMachine.ChangeState(stateMachine.FallState);
             return;
         }
-    }
-
-    protected void OnJumpStarted()
-    {
-        stateMachine.ChangeState(stateMachine.JumpState);
     }
 }

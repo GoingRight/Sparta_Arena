@@ -27,7 +27,7 @@ public class PlayerRunState : PlayerGroundState
             stateMachine.ChangeState(stateMachine.IdleState);
             return;
         }
-        if (!stateMachine.PlayerController.isSprint)
+        if (!stateMachine.PlayerController.isWalk)
         {
             stateMachine.ChangeState(stateMachine.WalkState);
             return;

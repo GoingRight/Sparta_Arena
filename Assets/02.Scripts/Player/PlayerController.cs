@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     public float speed;
     internal Vector2 curMoveInput;
     internal Rigidbody _rigidbody;
-    internal bool isSprint;
+    internal bool isWalk;
 
     [Header("Rotation")]
     [SerializeField] private float rotationSpeed = 15f; // 모델 회전 속도
@@ -64,7 +64,8 @@ public class PlayerController : MonoBehaviour
         Vector3 moveDirection = (camForward * curMoveInput.y + camRight * curMoveInput.x).normalized;
 
         // 속도 적용
-        speed = isSprint ? player.RunSpeed : player.stat.Speed;
+        speed = isWalk ? player.stat.Speed : player.RunSpeed;
+        speed = player.stateMachine.isAttacking ? 0 : speed;
         Vector3 velocity = moveDirection * speed;
         velocity.y = _rigidbody.velocity.y;
 
@@ -93,7 +94,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnSprint(InputAction.CallbackContext context)
     {
-        isSprint = (context.phase == InputActionPhase.Performed);
+        isWalk = context.phase == InputActionPhase.Performed;
     }
 
     public void OnJump(InputAction.CallbackContext context)
@@ -103,6 +104,18 @@ public class PlayerController : MonoBehaviour
             _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             jumpTrigger?.Invoke();
             Debug.Log("Jump");
+        }
+    }
+
+    public void OnAttack(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Performed)
+        {
+            player.stateMachine.isAttacking = true;
+            Debug.Log("Attack");
+        } else if (context.phase == InputActionPhase.Canceled)
+        {
+            player.stateMachine.isAttacking = false;
         }
     }
 
