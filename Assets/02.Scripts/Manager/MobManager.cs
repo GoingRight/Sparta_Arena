@@ -4,11 +4,15 @@ using System.Linq;
 
 public class MobManager : Manager<MobManager>
 {
-    public PlayerController player;
+    protected override bool IsPersistent => false;
+
+    public GameObject player;
     public Vector3 PlayerPosition => player != null ? player.transform.position : Vector3.zero;
 
     public RxList<RxModel> AllMobs { get; private set; }
     public MobGroupStatusModel GroupStatus { get; private set; }
+
+    public MobFormationPositioner Formation { get; private set; }
 
     private float underAttackTimer = 0f;
     private const float underAttackDuration = 3f;
@@ -20,14 +24,17 @@ public class MobManager : Manager<MobManager>
         GroupStatus.Setup(this);
     }
 
-    protected override void OnManagerInitialized()
+    protected override void OnInit()
     {
         RxTimer.Every(0.1f, this, RecalculateGroupStatus);
+        Formation = GetComponent<MobFormationPositioner>();
+        Formation.Setup(this);
     }
 
     public void Register(RxModel mobModel)
     {
         AllMobs.Add(mobModel);
+        Formation?.RefreshMobControllers();
     }
 
     public void NotifyUnderAttack()

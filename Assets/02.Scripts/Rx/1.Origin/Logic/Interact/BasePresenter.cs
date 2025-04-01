@@ -6,21 +6,11 @@ namespace Akasha
     {
         protected override void OnInit()
         {
+            base.OnInit();
             foreach (var child in GetComponentsInChildren<RxContextBehaviour>())
             {
                 child.InjectPresenterContext(this);
             }
-            SetupBindings();
         }
-
-        protected abstract void SetupBindings();
-
-        protected override void OnDispose()
-        {
-            base.OnDispose();
-            TeardownBindings();
-        }
-
-        protected virtual void TeardownBindings() { }
     }
 }

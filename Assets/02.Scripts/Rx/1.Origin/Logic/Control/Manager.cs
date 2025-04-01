@@ -28,7 +28,7 @@ namespace Akasha
         public static bool IsInstance => instance != null;
         protected virtual bool IsPersistent => true;
 
-        protected virtual void Awake()
+        protected override void Awake()
         {
             if (instance == null)
             {
@@ -42,42 +42,11 @@ namespace Akasha
                 Destroy(gameObject);
                 return;
             }
-
-            // RxContext 초기화 전에 수행됨
             OnSetup();
-        }
-
-        protected override void OnInit()
-        {
-            RegisterGlobalEvents();
-            SetupGlobalBindings();
-            HandleGlobalLogic();
-            OnManagerInitialized();
-        }
-
-        protected virtual void OnEnable() => OnActivate();
-        protected virtual void OnDisable() => OnDeactivate();
-
-        protected override void OnDispose()
-        {
-            base.OnDispose();
-            OnTeardown();
+            base.Awake(); 
         }
 
         protected virtual void OnSetup() { }
-        
-        protected virtual void OnManagerInitialized() { }
 
-        protected virtual void RegisterGlobalEvents() { }
-
-        protected virtual void SetupGlobalBindings() { }
-
-        protected virtual void HandleGlobalLogic() { }
-
-        protected virtual void OnTeardown() { }
-
-        protected virtual void OnActivate() { }
-
-        protected virtual void OnDeactivate() { }
     }
 }

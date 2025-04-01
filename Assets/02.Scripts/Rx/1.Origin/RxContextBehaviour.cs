@@ -1,4 +1,4 @@
-﻿using Akasha;
+using Akasha;
 using UnityEngine;
 
 public class RxContextBehaviour : MonoBehaviour

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace Akasha
 {
@@ -15,22 +15,6 @@ namespace Akasha
             else
                 OnDetachedFromEntity();
         }
-
-        protected override void OnInit()
-        {
-            base.OnInit();
-            OnInitialize();
-        }
-
-        protected override void OnDispose()
-        {
-            OnTerminate();
-            base.OnDispose();
-        }
-
-        protected virtual void OnInitialize() { }
-
-        protected virtual void OnTerminate() { }
 
         protected virtual void OnAttachedToEntity(BaseEntity entity) { }
 

@@ -4,7 +4,8 @@ using UnityEngine;
 public class AndroidMobEntity : BaseEntity
 {
     private AndroidMobModel model;
-    // --- 모델 래핑 프로퍼티 ---
+    public MobStateMachine stateMachine;
+
     private StrategyType Strategy
     {
         get => model.Strategy.Value;
@@ -27,13 +28,15 @@ public class AndroidMobEntity : BaseEntity
 
     protected override void SetupParts()
     {
-        var group = MobManager.Instance.GroupStatus;
+        stateMachine = new MobStateMachine();
+        stateMachine.Setup(this, () => transform.position);
 
+        BindStrategyToState();
+
+        var group = MobManager.Instance.GroupStatus;
         RxBinder.Bind(group.AvgHealth, _ => EvaluateStrategy(group), this);
         RxBinder.Bind(group.UnderAttack, _ => EvaluateStrategy(group), this);
     }
-
-    // --- 전략 판단 로직 ---
 
     private void EvaluateStrategy(MobGroupStatusModel status)
     {
@@ -45,13 +48,25 @@ public class AndroidMobEntity : BaseEntity
             Dance = DanceType.Buff;
 
         Strategy = StrategyType.Defend;
-
-        PerformDance();
+        RequestDanceState();
     }
 
-    private void PerformDance()
+    private void RequestDanceState()
     {
-        Debug.Log($"[AndroidMobEntity] 전략 댄스 실행: {Dance}");
-        // TODO: 애니메이션, 이펙트 처리
+        switch (Dance)
+        {
+            case DanceType.Heal:
+            case DanceType.Buff:
+                stateMachine.RequestState(MobState.Buff);
+                break;
+            case DanceType.Debuff:
+                stateMachine.RequestState(MobState.Debuff);
+                break;
+        }
+    }
+
+    private void BindStrategyToState()
+    {
+        // 선택적으로 애니메이션이나 추가 로직 바인딩 가능
     }
 }
