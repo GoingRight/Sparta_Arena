@@ -45,7 +45,7 @@ public class EnemySlime : EnemyMob
 
     private void Start()
     {
-        player = GameManager.instance.player;
+        player = GameManager.Instance.player;
         IsMove = true;
         InvokeRepeating("CallDuplicate", 5f, duplicateRate);
     }
