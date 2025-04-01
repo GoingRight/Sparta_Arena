@@ -13,4 +13,14 @@ public class PlayerJumpState : PlayerAirState
         base.Exit();
         StopAnimation(stateMachine.Player.AnimationData.JumpParameterHash);
     }
+
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
+        if (stateMachine.Player.RigidBody.velocity.y < 0)
+        {
+            stateMachine.ChangeState(stateMachine.FallState);
+            return;
+        }
+    }
 }
