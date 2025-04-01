@@ -14,6 +14,7 @@ public class Player : Character
     public PlayerController Input { get; private set; }
     public Rigidbody RigidBody { get; private set; }
 
+    public float RunSpeed { get; private set; } = 7f;
 
     private void Awake()
     {

@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
         Vector3 moveDirection = (camForward * curMoveInput.y + camRight * curMoveInput.x).normalized;
 
         // 속도 적용
-        speed = isSprint ? player.stat.Speed + 2f : player.stat.Speed;
+        speed = isSprint ? player.RunSpeed : player.stat.Speed;
         Vector3 velocity = moveDirection * speed;
         velocity.y = _rigidbody.velocity.y;
 
