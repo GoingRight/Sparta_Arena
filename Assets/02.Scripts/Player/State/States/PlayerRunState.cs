@@ -9,14 +9,14 @@ public class PlayerRunState : PlayerGroundState
     public override void Enter()
     {
         base.Enter();
-        StartAnimation(stateMachine.Player.animationData.RunParameterHash);
+        StartAnimation(stateMachine.Player.AnimationData.RunParameterHash);
         Debug.Log("Run");
     }
 
     public override void Exit()
     {
         base.Exit();
-        StopAnimation(stateMachine.Player.animationData.RunParameterHash);
+        StopAnimation(stateMachine.Player.AnimationData.RunParameterHash);
     }
 
     public override void Update()

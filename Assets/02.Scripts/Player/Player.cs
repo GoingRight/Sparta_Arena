@@ -5,23 +5,28 @@ using UnityEngine;
 public class Player : Character
 {
     [field: Header("FSM")]
-    [field: SerializeField] public PlayerAnimationData animationData { get; private set; }
+    [field: SerializeField] public PlayerAnimationData AnimationData { get; private set; }
     [field: SerializeField] public PlayerSO Data { get; private set; }
+
     private PlayerStateMachine stateMachine;
 
-    public Animator animator { get; private set; }
-    public PlayerController input { get; private set; }
-    public Rigidbody controller { get; private set; }
+    public Animator Animator { get; private set; }
+    public PlayerController Input { get; private set; }
+    public Rigidbody RigidBody { get; private set; }
 
 
     private void Awake()
     {
-        animationData.Initialize();
-        animator = GetComponentInChildren<Animator>();
-        input = GetComponent<PlayerController>();
-        controller = GetComponent<Rigidbody>();
+        AnimationData.Initialize();
+        Animator = GetComponentInChildren<Animator>();
+        Input = GetComponent<PlayerController>();
+        RigidBody = GetComponent<Rigidbody>();
 
         stateMachine = new PlayerStateMachine(this);
+    }
+
+    private void Start()
+    {
         stateMachine.ChangeState(stateMachine.IdleState);
     }
 

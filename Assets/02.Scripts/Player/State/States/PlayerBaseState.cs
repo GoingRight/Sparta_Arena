@@ -41,15 +41,11 @@ public class PlayerBaseState : IState
 
     protected void StartAnimation(int animatorHash)
     {
-        stateMachine.Player.animator.SetBool(animatorHash, true);
+        stateMachine.Player.Animator.SetBool(animatorHash, true);
     }
 
     protected void StopAnimation(int animatorHash)
     {
-        stateMachine.Player.animator.SetBool(animatorHash, false);
+        stateMachine.Player.Animator.SetBool(animatorHash, false);
     }
-
-    protected virtual void OnMoveCancled(InputAction.CallbackContext context) { }
-
-    protected virtual void OnRunStarted(InputAction.CallbackContext context) { }
 }

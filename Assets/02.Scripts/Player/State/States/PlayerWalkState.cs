@@ -9,14 +9,14 @@ public class PlayerWalkState : PlayerGroundState
     public override void Enter()
     {
         base.Enter();
-        StartAnimation(stateMachine.Player.animationData.WalkParameterHash);
+        StartAnimation(stateMachine.Player.AnimationData.WalkParameterHash);
         Debug.Log("Walk");
     }
 
     public override void Exit()
     {
         base.Exit();
-        StopAnimation(stateMachine.Player.animationData.WalkParameterHash);
+        StopAnimation(stateMachine.Player.AnimationData.WalkParameterHash);
     }
 
     public override void Update()

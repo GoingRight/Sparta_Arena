@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerGroundState : PlayerBaseState
 {
@@ -8,14 +9,16 @@ public class PlayerGroundState : PlayerBaseState
 
     public override void Enter()
     {
+        stateMachine.PlayerController.jumpTrigger += OnJumpStarted;
         base.Enter();
-        StartAnimation(stateMachine.Player.animationData.GroundParameterHash);
+        StartAnimation(stateMachine.Player.AnimationData.GroundParameterHash);
     }
 
     public override void Exit()
     {
+        stateMachine.PlayerController.jumpTrigger -= OnJumpStarted;
         base.Exit();
-        StopAnimation(stateMachine.Player.animationData.GroundParameterHash);
+        StopAnimation(stateMachine.Player.AnimationData.GroundParameterHash);
     }
 
     public override void Update()
@@ -26,5 +29,10 @@ public class PlayerGroundState : PlayerBaseState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+    }
+
+    protected void OnJumpStarted()
+    {
+        stateMachine.ChangeState(stateMachine.JumpState);
     }
 }
