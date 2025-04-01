@@ -17,11 +17,11 @@ public class PlayerAnimationData
     [SerializeField] private string comboAttackParameterName = "ComboAttack";
 
     public int GroundParameterHash { get; private set; }
-    public int idleParameterHash { get; private set; }
-    public int walkParameterHash { get; private set; }
-    public int runParameterHash { get; private set; }
+    public int IdleParameterHash { get; private set; }
+    public int WalkParameterHash { get; private set; }
+    public int RunParameterHash { get; private set; }
     public int airParameterHash { get; private set; }
-    public int jumpParameterHash { get; private set; }
+    public int JumpParameterHash { get; private set; }
     public int fallParameterHash { get; private set; }
     public int attackParameterHash { get; private set; }
     public int comboAttackParameterHash { get; private set; }
@@ -29,16 +29,16 @@ public class PlayerAnimationData
     public void Initialize()
     {
         GroundParameterHash = Animator.StringToHash(groundParameterName);
-        idleParameterHash = Animator.StringToHash(idleParameterName);
-        walkParameterHash = Animator.StringToHash(walkParameterName);
-        runParameterHash = Animator.StringToHash(runParameterName);
+        IdleParameterHash = Animator.StringToHash(idleParameterName);
+        WalkParameterHash = Animator.StringToHash(walkParameterName);
+        RunParameterHash = Animator.StringToHash(runParameterName);
         airParameterHash = Animator.StringToHash(airParameterName);
-        jumpParameterHash = Animator.StringToHash(jumpParameterName);
+        JumpParameterHash = Animator.StringToHash(jumpParameterName);
         fallParameterHash = Animator.StringToHash(fallParameterName);
         attackParameterHash = Animator.StringToHash(attackParameterName);
         comboAttackParameterHash = Animator.StringToHash(comboAttackParameterName);
 
         Animator anim = new Animator();
-        anim.SetBool(GroundParameterHash, true);
+        //anim.SetBool(GroundParameterHash, true);
     }
 }

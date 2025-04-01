@@ -1,3 +1,6 @@
+using System;
+using Unity.VisualScripting;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,31 +9,31 @@ public class PlayerController : MonoBehaviour
     [Header("Move")]
     private Player player;
     public float speed;
-    private Vector2 curMoveInput;
-    private Rigidbody _rigidbody;
-    private bool isSprint;
+    internal Vector2 curMoveInput;
+    internal Rigidbody _rigidbody;
+    internal bool isSprint;
 
     [Header("Look")]
     private Vector2 curLookInput;
     [SerializeField] private Transform camContainer;
-    [SerializeField] private float lookSpeed;
-    [SerializeField] private float maxXLook;
-    [SerializeField] private float minXLook;
     [SerializeField] private bool CursurLockState;
     private float curCamX;
-    private bool isZoom;
-    Camera cam;
+
+    [Header("Jump")]
+    private float jumpForce;
+    public Action jumpTrigger;
 
     private void Awake()
     {
         // Move
         _rigidbody = GetComponent<Rigidbody>();
-        player = GetComponent<Player>();
+        player = GetComponent<Player>() ?? throw new System.NullReferenceException($"player 클래스를 가지지 않음 : {this.gameObject.name}");
 
         // Look
-        lookSpeed = 0.3f;
         Cursor.lockState = (CursurLockState) ? CursorLockMode.Locked : CursorLockMode.None;
-        cam = Camera.main;
+
+        // Jump
+        jumpForce = player.Data.AirData.JumpForce;
     }
 
     private void FixedUpdate()
@@ -40,51 +43,82 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        Look();
+        RotateTarget();
     }
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        if (context.phase== InputActionPhase.Performed)
+        if (context.phase == InputActionPhase.Performed)
             curMoveInput = context.ReadValue<Vector2>();
-        else if (context.phase== InputActionPhase.Canceled)
+
+        else if (context.phase == InputActionPhase.Canceled)
             curMoveInput = Vector2.zero;
+    }
+
+    public Vector2 ReturnMoveInput()
+    {
+        return curMoveInput;
     }
 
     private void Move()
     {
-        Vector3 vec = transform.forward * curMoveInput.y + transform.right * curMoveInput.x;
-        speed = (isSprint) ? player.stat.Speed + 2f : player.stat.Speed;
-        vec *= speed;
-        vec.y = _rigidbody.velocity.y;
+        Vector3 camForward = camContainer.forward;
+        camForward.y = 0;
+        camForward.Normalize();
 
-        _rigidbody.velocity = vec;
+        Vector3 camRight = camContainer.right;
+        camRight.y = 0;
+        camRight.Normalize();
+
+        Vector3 moveDirection = (camForward * curMoveInput.y + camRight * curMoveInput.x).normalized;
+
+        speed = isSprint ? player.stat.Speed + 2f : player.stat.Speed;
+        Vector3 velocity = moveDirection * speed;
+        velocity.y = _rigidbody.velocity.y;
+
+        _rigidbody.velocity = velocity;
+
+        if (moveDirection.magnitude > 0.1f)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                targetRotation,
+                Time.deltaTime * 5f
+            );
+        }
     }
 
-    public void OnLook(InputAction.CallbackContext context)
+    public void RotateTarget()
     {
-        curLookInput = context.ReadValue<Vector2>();
-    }
+        // 목표 회전 값 가져오기
+        Quaternion targetRotation = camContainer.rotation;
 
-    private void Look()
-    {
-        curCamX += curLookInput.y * lookSpeed;
-        curCamX = Mathf.Clamp(curCamX, minXLook, maxXLook);
+        // Y축 회전만 유지 (X와 Z축은 고정)
+        Vector3 eulerAngles = targetRotation.eulerAngles;
+        eulerAngles.x = 0f; // X축 고정
+        eulerAngles.z = 0f; // Z축 고정
 
-        camContainer.localEulerAngles = new Vector3(-curCamX, 0, 0);
-        transform.eulerAngles += new Vector3(0, curLookInput.x * lookSpeed, 0);
+        targetRotation = Quaternion.Euler(eulerAngles);
 
-        if (isZoom)
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 30f, 10f * Time.deltaTime);
-        else
-            cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, 60f, 10f * Time.deltaTime);
+        if (camContainer.rotation.y - targetRotation.y > 1f)
+        {
+            Debug.Log("차이 발생");
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 2f); // 회전 속도 조절
+        }
     }
 
     public void OnSprint(InputAction.CallbackContext context)
     {
-        if (context.phase == InputActionPhase.Performed)
-            isSprint = true;
-        else
-            isSprint = false;
+        isSprint = (context.phase == InputActionPhase.Performed) ? true : false;
+    }
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.phase == InputActionPhase.Started)
+        {
+            _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            jumpTrigger?.Invoke();
+        }
     }
 }

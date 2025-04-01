@@ -1,5 +1,5 @@
 {
-    "name": "InputAction",
+    "name": "PlayerInputAction",
     "maps": [
         {
             "name": "Player",
@@ -15,18 +15,45 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Look",
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "7310497c-0233-4552-a2df-340d72265bec",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Sprint",
+                    "type": "Button",
+                    "id": "d45501e4-0897-4544-b85d-ae74878ecac0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Look (CineMachine)",
                     "type": "Value",
-                    "id": "4faab6f8-bad9-4022-ae2d-a70c0d0709b6",
+                    "id": "d8f69440-b4d0-450e-8357-fed164ee40c8",
                     "expectedControlType": "Delta",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Sprint",
+                    "name": "Attack",
                     "type": "Button",
-                    "id": "d45501e4-0897-4544-b85d-ae74878ecac0",
+                    "id": "e5bbb50f-18b3-4638-b146-05ae0a585e39",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Zoom (Range)",
+                    "type": "Button",
+                    "id": "d64989d6-2970-4d4f-ae9f-b602ec7e5500",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -102,12 +129,45 @@
                 },
                 {
                     "name": "",
-                    "id": "0eeca629-2b77-4e49-a68d-8d7a6a3d7285",
+                    "id": "7d5514f9-8f9b-4454-8a2d-e70072458506",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "11126a9d-8047-49f6-9be2-5285724365a9",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom (Range)",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "34068202-4c26-41c1-8116-8b2d2c99b014",
                     "path": "<Mouse>/delta",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Look",
+                    "action": "Look (CineMachine)",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "187ce3a9-75c0-4572-a6e8-c76d87146c0d",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
