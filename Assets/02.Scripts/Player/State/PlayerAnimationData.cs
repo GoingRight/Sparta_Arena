@@ -20,11 +20,11 @@ public class PlayerAnimationData
     public int IdleParameterHash { get; private set; }
     public int WalkParameterHash { get; private set; }
     public int RunParameterHash { get; private set; }
-    public int airParameterHash { get; private set; }
+    public int AirParameterHash { get; private set; }
     public int JumpParameterHash { get; private set; }
-    public int fallParameterHash { get; private set; }
-    public int attackParameterHash { get; private set; }
-    public int comboAttackParameterHash { get; private set; }
+    public int FallParameterHash { get; private set; }
+    public int AttackParameterHash { get; private set; }
+    public int ComboAttackParameterHash { get; private set; }
 
     public void Initialize()
     {
@@ -32,11 +32,11 @@ public class PlayerAnimationData
         IdleParameterHash = Animator.StringToHash(idleParameterName);
         WalkParameterHash = Animator.StringToHash(walkParameterName);
         RunParameterHash = Animator.StringToHash(runParameterName);
-        airParameterHash = Animator.StringToHash(airParameterName);
+        AirParameterHash = Animator.StringToHash(airParameterName);
         JumpParameterHash = Animator.StringToHash(jumpParameterName);
-        fallParameterHash = Animator.StringToHash(fallParameterName);
-        attackParameterHash = Animator.StringToHash(attackParameterName);
-        comboAttackParameterHash = Animator.StringToHash(comboAttackParameterName);
+        FallParameterHash = Animator.StringToHash(fallParameterName);
+        AttackParameterHash = Animator.StringToHash(attackParameterName);
+        ComboAttackParameterHash = Animator.StringToHash(comboAttackParameterName);
 
         Animator anim = new Animator();
         //anim.SetBool(GroundParameterHash, true);
