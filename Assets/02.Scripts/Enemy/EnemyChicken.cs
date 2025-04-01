@@ -92,8 +92,10 @@ public class EnemyChicken : EnemyBoss
     {
         if (isBoss)
         {
+            bossPhase = 1;
+            
             detectRange *= 2.5f;
-            attackRange += 0.5f;
+            attackRange += 1f;
             transform.localScale *= 4f;
             stat.Attack *= 5f;
             stat.Speed *= 3f;
@@ -296,7 +298,7 @@ public class EnemyChicken : EnemyBoss
 
     private void CheckAndEnterPhase2() // 2페이즈 확인
     {
-        if (bossPhase == 1 && stat.CurrentHP <= stat.MaxHP * 0.5f)
+        if (bossPhase == 1 && isBoss == true && stat.CurrentHP <= stat.MaxHP * 0.5f)
         {
             EnterPhase2();
         }
