@@ -1,5 +1,7 @@
 using Akasha;
 using UnityEngine;
+using System;
+using System.Collections.Generic;
 
 public enum MobState
 {
@@ -31,48 +33,35 @@ public static class MobStatePriority
 
 public class MobStateMachine : RxStateMachine<MobState>
 {
-    public RxFlag IsIdle, IsWalk, IsRun, IsActing, IsHit, IsDead, IsRetreating, IsBuffing, IsDebuffing;
-
     private Vector3 selfPosition => _positionProvider?.Invoke() ?? Vector3.zero;
-    private System.Func<Vector3>? _positionProvider;
+    private Func<Vector3>? _positionProvider;
 
     private MobGroupStatusModel group;
 
-    public void Setup(object owner, System.Func<Vector3> positionProvider)
+    public MobStateMachine(object owner, Func<Vector3> positionProvider) : base(owner, MobState.Idle)
     {
-        base.Setup(owner);
         _positionProvider = positionProvider;
 
-        Register(MobState.Idle, MobStatePriority.Idle);
-        Register(MobState.Walk, MobStatePriority.Walk);
-        Register(MobState.Run, MobStatePriority.Run);
-        Register(MobState.Act1, MobStatePriority.Act);
-        Register(MobState.Act2, MobStatePriority.Act);
-        Register(MobState.Act3, MobStatePriority.Act);
-        Register(MobState.Hit, MobStatePriority.Hit);
-        Register(MobState.Dead, MobStatePriority.Dead);
-        Register(MobState.Retreat, MobStatePriority.Retreat);
-        Register(MobState.Buff, MobStatePriority.Buff);
-        Register(MobState.Debuff, MobStatePriority.Debuff);
+        Register(MobState.Idle, IsAlways);
+        Register(MobState.Walk, IsAlways);
+        Register(MobState.Run, IsAlways);
+        Register(MobState.Act1, IsAlways);
+        Register(MobState.Act2, IsAlways);
+        Register(MobState.Act3, IsAlways);
+        Register(MobState.Hit, IsAlways);
+        Register(MobState.Dead, IsAlways);
 
         group = MobManager.Instance.GroupStatus;
+
+        Register(MobState.Retreat, () => IsPlayerNear() && IsWeakGroup());
+        Register(MobState.Buff, () => IsGroupDense() && IsSafe());
+        Register(MobState.Debuff, () => IsPlayerNear() && IsGroupAggressive());
+
         RxBinder.Bind(group.AvgHealth, _ => TickAutoStates(), this);
         RxBinder.Bind(group.UnderAttack, _ => TickAutoStates(), this);
-
-        AddCondition(MobState.Retreat, () => IsPlayerNear() && IsWeakGroup());
-        AddCondition(MobState.Buff, () => IsGroupDense() && IsSafe());
-        AddCondition(MobState.Debuff, () => IsPlayerNear() && IsGroupAggressive());
-
-        IsIdle = CreateFlag(MobState.Idle);
-        IsWalk = CreateFlag(MobState.Walk);
-        IsRun = CreateFlag(MobState.Run);
-        IsActing = CreateFlag(MobState.Act1, MobState.Act2, MobState.Act3);
-        IsHit = CreateFlag(MobState.Hit);
-        IsDead = CreateFlag(MobState.Dead);
-        IsRetreating = CreateFlag(MobState.Retreat);
-        IsBuffing = CreateFlag(MobState.Buff);
-        IsDebuffing = CreateFlag(MobState.Debuff);
     }
+
+    private bool IsAlways() => true;
 
     public void TickAutoStates()
     {
@@ -83,11 +72,7 @@ public class MobStateMachine : RxStateMachine<MobState>
 
     private void TryRequest(MobState state)
     {
-        if (_states.TryGetValue(state, out var info))
-        {
-            if (info.Condition?.Invoke() == true && !IsActive(state))
-                RequestState(state);
-        }
+        Request(state); // RxStateMachine이 조건 검사 내부 처리
     }
 
     private bool IsPlayerNear()
@@ -96,39 +81,28 @@ public class MobStateMachine : RxStateMachine<MobState>
         return (playerPos - selfPosition).sqrMagnitude < 4f;
     }
 
-    private bool IsWeakGroup()
-    {
-        return group.AvgHealth.Value < 0.5f;
-    }
-
-    private bool IsGroupDense()
-    {
-        return group.AllyCount.Value >= 6;
-    }
-
-    private bool IsSafe()
-    {
-        return !group.UnderAttack.Value;
-    }
-
-    private bool IsGroupAggressive()
-    {
-        return group.UnderAttack.Value;
-    }
+    private bool IsWeakGroup() => group.AvgHealth.Value < 0.5f;
+    private bool IsGroupDense() => group.AllyCount.Value >= 6;
+    private bool IsSafe() => !group.UnderAttack.Value;
+    private bool IsGroupAggressive() => group.UnderAttack.Value;
 
     public void Update(Vector3 moveDir, float walkThreshold, float runThreshold)
     {
         TickAutoStates();
 
-        if (IsActive(MobState.Dead) || IsActive(MobState.Retreat)) return;
+        if (ActiveState.Value == MobState.Dead || ActiveState.Value == MobState.Retreat)
+            return;
 
         float speed = new Vector3(moveDir.x, 0f, moveDir.z).magnitude;
 
         if (speed > runThreshold)
-            RequestState(MobState.Run);
+            Request(MobState.Run);
         else if (speed > walkThreshold)
-            RequestState(MobState.Walk);
+            Request(MobState.Walk);
         else
-            RequestState(MobState.Idle);
+            Request(MobState.Idle);
     }
+
+    public bool Is(MobState state) => ActiveState.Value == state;
+    public bool IsActing => Is(MobState.Act1) || Is(MobState.Act2) || Is(MobState.Act3);
 }

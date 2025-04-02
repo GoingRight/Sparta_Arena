@@ -111,6 +111,7 @@ namespace Akasha
 
             RxValidator.ValidateFieldSubscriber(context, this);
             _subscription.Add(subscriber, context, relationType);
+            subscriber(_items.ToList());
         }
 
         public void SubscribeDelta(Action<ListDelta<T>> subscriber, object context, RxType relationType)

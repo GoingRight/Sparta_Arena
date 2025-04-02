@@ -2,7 +2,12 @@ using UnityEngine;
 
 namespace Akasha
 {
-    public abstract class Manager<T> : RxContextBehaviour, IManager, IGlobalLogicalSubscriber, IGlobalEventSubscriber, IUnfiniteTriggerSubscriber, IUnfiniteLocalEventSubscriber
+    public abstract class Manager<T> : RxContextBehaviour,
+        IManager,
+        IGlobalLogicalSubscriber,
+        IGlobalEventSubscriber,
+        IUnfiniteTriggerSubscriber,
+        IUnfiniteLocalEventSubscriber
         where T : Manager<T>
     {
         private static T? instance;
@@ -21,6 +26,8 @@ namespace Akasha
                         instance = singleton.AddComponent<T>();
                     }
                 }
+
+                instance.InitIfNeeded();
                 return instance!;
             }
         }
@@ -28,8 +35,11 @@ namespace Akasha
         public static bool IsInstance => instance != null;
         protected virtual bool IsPersistent => true;
 
+        public bool isInitialized = false;
+
         protected override void Awake()
         {
+            base.Awake();
             if (instance == null)
             {
                 instance = (T)this;
@@ -37,16 +47,25 @@ namespace Akasha
                 if (IsPersistent)
                     DontDestroyOnLoad(gameObject);
             }
-            else
+            else if (instance != this)
             {
                 Destroy(gameObject);
                 return;
             }
+            InitIfNeeded();
+        }
+
+        public void InitIfNeeded()
+        {
+            if (isInitialized) return;
+
             OnSetup();
-            base.Awake(); 
+            OnInitialize();
+
+            isInitialized = true;
         }
 
         protected virtual void OnSetup() { }
-
+        protected virtual void OnInitialize() { }
     }
 }

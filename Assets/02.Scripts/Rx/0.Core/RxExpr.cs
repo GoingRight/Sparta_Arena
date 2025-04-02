@@ -49,6 +49,7 @@ namespace Akasha
 
             RxValidator.ValidateFieldSubscriber(context, this);
             _subscription.Add(subscriber, context, relationType);
+            subscriber(_value);
         }
 
         public IDisposable Bind(Action<T> subscriber, object context, RxType relationType)

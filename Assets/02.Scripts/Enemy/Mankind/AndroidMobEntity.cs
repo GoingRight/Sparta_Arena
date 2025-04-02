@@ -9,27 +9,25 @@ public class AndroidMobEntity : BaseEntity
     private StrategyType Strategy
     {
         get => model.Strategy.Value;
-        set => model.Strategy.SetValue(value, this);
+        set => model.Strategy.SetValue(value, model);
     }
 
     private DanceType Dance
     {
         get => model.Dance.Value;
-        set => model.Dance.SetValue(value, this);
+        set => model.Dance.SetValue(value, model);
     }
 
     protected override void SetupModels()
     {
         model = new AndroidMobModel();
         model.Setup(this);
-
         MobManager.Instance.Register(model);
     }
 
     protected override void SetupParts()
     {
-        stateMachine = new MobStateMachine();
-        stateMachine.Setup(this, () => transform.position);
+        stateMachine = new MobStateMachine(this, () => transform.position); // ✅ 새 구조: 생성자에서 상태 등록
 
         BindStrategyToState();
 
@@ -57,16 +55,17 @@ public class AndroidMobEntity : BaseEntity
         {
             case DanceType.Heal:
             case DanceType.Buff:
-                stateMachine.RequestState(MobState.Buff);
+                stateMachine.Request(MobState.Buff); // ✅ 이름 변경
                 break;
             case DanceType.Debuff:
-                stateMachine.RequestState(MobState.Debuff);
+                stateMachine.Request(MobState.Debuff); // ✅ 이름 변경
                 break;
         }
     }
 
     private void BindStrategyToState()
     {
-        // 선택적으로 애니메이션이나 추가 로직 바인딩 가능
+        // 필요시 상태 변화 바인딩 예:
+        // stateMachine.ActiveState.Bind(state => { ... }, this, RxType.Functional);
     }
 }

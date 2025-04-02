@@ -14,60 +14,68 @@ public class MobManager : Manager<MobManager>
 
     public MobFormationPositioner Formation { get; private set; }
 
-    private float underAttackTimer = 0f;
     private const float underAttackDuration = 3f;
-
+    private float underAttackTimer = 0f;
+    private void Update()
+    {
+        RxQueue.ExecuteAll();
+    }
     protected override void OnSetup()
     {
+        if (isInitialized) return;
         AllMobs = new RxList<RxModel>();
         GroupStatus = new MobGroupStatusModel();
         GroupStatus.Setup(this);
-    }
-
-    protected override void OnInit()
-    {
-        RxTimer.Every(0.1f, this, RecalculateGroupStatus);
         Formation = GetComponent<MobFormationPositioner>();
         Formation.Setup(this);
     }
 
+    protected override void OnInit()
+    {
+        if (isInitialized) return;
+        // Rx 기반 변화 감지로 집단 상태 계산
+        RxBinder.Bind(AllMobs, _ => RecalculateGroupStatus(), this);
+        RxBinder.Bind(GroupStatus.AvgHealth, _ => RecalculateGroupStatus(), this);
+        RxBinder.Bind(GroupStatus.UnderAttack, _ => RecalculateGroupStatus(), this);
+    }
+
+
     public void Register(RxModel mobModel)
     {
         AllMobs.Add(mobModel);
-        Formation?.RefreshMobControllers();
+        Formation.RefreshMobControllers();
     }
+
 
     public void NotifyUnderAttack()
     {
         underAttackTimer = underAttackDuration;
+        GroupStatus.UpdateUnderAttack(true, this);
     }
 
     private void RecalculateGroupStatus()
     {
         if (underAttackTimer > 0f)
+        {
             underAttackTimer -= Time.deltaTime;
+            if (underAttackTimer <= 0f)
+                GroupStatus.UpdateUnderAttack(false, this);
+        }
 
         var models = AllMobs.Value;
         int count = models.Count;
 
         if (count == 0)
         {
-            GroupStatus.UpdateStatus(1f, 0, false); // 기본 상태
+            GroupStatus.UpdateStatus(1f, 0, false, this);
             return;
         }
 
-        // MobModel들이 IMobHealthReadable을 구현했다고 가정
-        float totalRatio = models
-            .OfType<IMobHealthReadable>()
-            .Sum(m => m.HealthRatio);
-
-        GroupStatus.UpdateStatus(
-            totalRatio / count,
-            count,
-            underAttackTimer > 0f
-        );
+        float totalRatio = models.OfType<IMobHealthReadable>().Sum(m => m.HealthRatio);
+        GroupStatus.UpdateStatus(totalRatio / count, count, GroupStatus.UnderAttack.Value, this);
     }
 }
+
 public class MobGroupStatusModel : RxModel
 {
     public RxVar<float> AvgHealth { get; private set; }
@@ -83,10 +91,16 @@ public class MobGroupStatusModel : RxModel
         UnderAttack = new RxVar<bool>(false, this);
     }
 
-    public void UpdateStatus(float avgHealth, int allyCount, bool underAttack)
+    public void UpdateStatus(float avgHealth, int allyCount, bool underAttack, object caller)
     {
-        AvgHealth.SetValue(avgHealth, this);
-        AllyCount.SetValue(allyCount, this);
-        UnderAttack.SetValue(underAttack, this);
+        AvgHealth.SetValue(avgHealth, caller);
+        AllyCount.SetValue(allyCount, caller);
+        UnderAttack.SetValue(underAttack, caller);
+    }
+
+    public void UpdateUnderAttack(bool underAttack, object caller)
+    {
+        if (UnderAttack.Value != underAttack)
+            UnderAttack.SetValue(underAttack, caller);
     }
 }

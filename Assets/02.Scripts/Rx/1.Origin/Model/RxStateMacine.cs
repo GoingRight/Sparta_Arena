@@ -1,73 +1,40 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Akasha;
 
-
-public class RxStateMachine<T> : IRxStateMachine, IFunctionalSubscriber, IFiniteTriggerSubscriber, IFiniteLocalEventSubscriber where T : Enum
+namespace Akasha
 {
-    protected readonly Dictionary<T, StateInfo> _states = new();
-    private readonly HashSet<T> _activeStates = new();
-    private object? _owner;
-
-    protected class StateInfo
+    public class RxStateMachine<T> : IRxStateMachine, IFunctionalSubscriber, IFiniteTriggerSubscriber, IFiniteLocalEventSubscriber where T : Enum
     {
-        public int Priority;
-        public Func<bool>? Condition;
-        public RxFlag? Flag;
-    }
+        public readonly RxVar<T> ActiveState;
 
-    public void Setup(object owner)
-    {
-        _owner = owner;
-    }
+        private readonly Dictionary<T, Func<bool>?> _conditions = new();
+        private readonly object _owner;
 
-    public void Register(T state, int priority)
-    {
-        _states[state] = new StateInfo { Priority = priority };
-    }
-
-    public void AddCondition(T state, Func<bool> condition)
-    {
-        if (_states.TryGetValue(state, out var info))
-            info.Condition = condition;
-        else
-            _states[state] = new StateInfo { Priority = 0, Condition = condition };
-    }
-
-    public void RequestState(T state)
-    {
-        if (!_states.TryGetValue(state, out var info)) return;
-
-        // 조건 우선 적용
-        if (info.Condition != null && !info.Condition()) return;
-
-        // 단일 상태만 유지
-        var current = _activeStates.FirstOrDefault();
-        if (!_activeStates.Contains(state))
+        public RxStateMachine(object owner, T initialState)
         {
-            if (current != null && _states[current].Priority > info.Priority)
-                return;
-
-            _activeStates.Clear();
-            _activeStates.Add(state);
-            NotifyFlags();
+            _owner = owner;
+            ActiveState = new RxVar<T>(initialState, owner);
         }
-    }
 
-    public bool IsActive(T state) => _activeStates.Contains(state);
-
-    public RxFlag CreateFlag(params T[] targetStates)
-    {
-        return new RxFlag(() => targetStates.Any(IsActive), _owner!);
-    }
-
-    private void NotifyFlags()
-    {
-        foreach (var kvp in _states)
+        public void Register(T state, Func<bool>? condition = null)
         {
-            kvp.Value.Flag?.GetType().GetMethod("Recalculate", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                ?.Invoke(kvp.Value.Flag, null);
+            _conditions[state] = condition;
+        }
+
+        public void Request(T state)
+        {
+            if (_conditions.TryGetValue(state, out var condition))
+            {
+                if (condition != null && !condition())
+                    return;
+            }
+
+            ActiveState.SetValue(state, _owner);
+        }
+
+        public bool IsActive(T state)
+        {
+            return EqualityComparer<T>.Default.Equals(ActiveState.Value, state);
         }
     }
 }
