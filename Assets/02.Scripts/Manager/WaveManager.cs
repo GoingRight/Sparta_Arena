@@ -78,7 +78,7 @@ public class WaveManager : MonoBehaviour
             randomMonsterType[i] = list[randomValue];
             list.RemoveAt(randomValue);
         }
-        curWaveIndex = 5;
+        curWaveIndex = 1;
     }
 
     public void OnSceneLoded()
@@ -102,7 +102,7 @@ public class WaveManager : MonoBehaviour
         if (mobWaves[waveIndex] == null) return;
         for(int i = 0; i < mobWaves[waveIndex].monsterCount; i++)
         {
-            Instantiate(mobWaves[waveIndex].monsterPrefab, (spawnPosition.transform.position+Vector3.right*2*i), Quaternion.identity, spawnPosition);
+            Instantiate(mobWaves[waveIndex].monsterPrefab, (spawnPosition.transform.position+Vector3.forward*2*i), Quaternion.identity, spawnPosition);
             monsterCount++;
         }
     }

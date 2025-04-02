@@ -141,7 +141,7 @@ public class EnemySlime : EnemyMob
 
     public void Duplicate()
     {
-        if (WaveManager.Instance.monsterCount > 10) return;
+        if (WaveManager.Instance.monsterCount >= 10) return;
         EnemySlime replica = Instantiate(this.gameObject, WaveManager.Instance.spawnPosition).GetComponent<EnemySlime>();
         WaveManager.Instance.monsterCount++;
         replica.transform.position = transform.position + transform.right*2;
