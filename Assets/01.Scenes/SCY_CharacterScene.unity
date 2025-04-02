@@ -815,6 +815,21 @@ PrefabInstance:
       propertyPath: camPivot
       value: 
       objectReference: {fileID: 2146188582}
+    - target: {fileID: 5074194985403614422, guid: e9fa766a341655b418b7a455a7778afd,
+        type: 3}
+      propertyPath: stat.maxHP
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074194985403614422, guid: e9fa766a341655b418b7a455a7778afd,
+        type: 3}
+      propertyPath: stat.attack
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 5074194985403614422, guid: e9fa766a341655b418b7a455a7778afd,
+        type: 3}
+      propertyPath: stat.currentHP
+      value: 1000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

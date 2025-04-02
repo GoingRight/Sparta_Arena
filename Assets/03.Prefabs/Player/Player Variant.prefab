@@ -157,6 +157,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: LongSword
       objectReference: {fileID: 0}
+    - target: {fileID: 4334314813405729787, guid: edccbf15fadd9704cb7a2020a492b120,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4334314813405729787, guid: edccbf15fadd9704cb7a2020a492b120,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4334314813405729787, guid: edccbf15fadd9704cb7a2020a492b120,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4334314813405729787, guid: edccbf15fadd9704cb7a2020a492b120,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 180
+      objectReference: {fileID: 0}
     - target: {fileID: 4334314813405729788, guid: edccbf15fadd9704cb7a2020a492b120,
         type: 3}
       propertyPath: m_TagString
@@ -322,6 +342,26 @@ PrefabInstance:
       propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 6498746590720509977, guid: fe76244bba085e140895f4997070edee,
+        type: 3}
+      propertyPath: stat.maxHP
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6498746590720509977, guid: fe76244bba085e140895f4997070edee,
+        type: 3}
+      propertyPath: stat.attack
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 6498746590720509977, guid: fe76244bba085e140895f4997070edee,
+        type: 3}
+      propertyPath: FeetParticle
+      value: 
+      objectReference: {fileID: 499194197696944974}
+    - target: {fileID: 6498746590720509977, guid: fe76244bba085e140895f4997070edee,
+        type: 3}
+      propertyPath: stat.currentHP
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 6626384111162085518, guid: fe76244bba085e140895f4997070edee,
         type: 3}
       propertyPath: m_Constraints
@@ -363,6 +403,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sword: {fileID: 2752365787765548499}
+--- !u!1 &499194197696944974 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1924858491563530113, guid: fe76244bba085e140895f4997070edee,
+    type: 3}
+  m_PrefabInstance: {fileID: 2043234431512104143}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1375932589946039406 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1099807969140121761, guid: fe76244bba085e140895f4997070edee,

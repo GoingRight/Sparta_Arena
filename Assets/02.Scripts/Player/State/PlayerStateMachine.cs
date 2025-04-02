@@ -9,6 +9,7 @@ public class PlayerStateMachine : StateMachine
     public float RotationDamping { get; private set; }
     public float JumpForce { get; set; } = 500f;
 
+    private GameObject feetParticle { get; set; }
     public bool isAttacking { get; set; }
     public int ComboIndex { get; set; }
     public Transform MainCamTransform { get; private set; }
@@ -24,6 +25,8 @@ public class PlayerStateMachine : StateMachine
         this.Player = player;
 
         MainCamTransform = Camera.main.transform;
+
+        feetParticle = Player.FeetParticle;
 
         IdleState = new PlayerIdleState(this);
         WalkState = new PlayerWalkState(this);
