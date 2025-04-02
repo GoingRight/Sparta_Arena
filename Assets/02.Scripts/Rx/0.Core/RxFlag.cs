@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Akasha
 {
-    public class RxFlag : IRxComputed, IRxObservable<bool>, IRxDynamicSubscribable, IRxModel
+    public class RxFlag : IRxComputed, IRxObservable<bool>, IRxDynamicSubscribable
     {
         private readonly RxVar<bool> _state;
         private RxExpr<bool>? _expression;
@@ -47,14 +46,15 @@ namespace Akasha
             expr.SubscribeLaw(v => _recalc(v), this, RxType.Functional);
             Recalculate();
         }
+
         public void RecalculatePublic() => Recalculate();
+
         private void Recalculate()
         {
             if (_expression != null)
             {
                 var newVal = this.WithContext(() => _expression.Value);
                 Debug.Log($"[RxFlag] Recalculate: newVal = {newVal}, 현재값 = {_state.Value}");
-
                 _state.SetValue(newVal, this);
             }
         }
@@ -103,7 +103,7 @@ namespace Akasha
 
         private static void ValidateOwner(object owner)
         {
-            if (owner is not IRxStateMachine and not IScreen and not IRxUnsafe and not IManager and not IRxModel)
+            if (owner is not IRxFieldOwner && owner is not IRxExprOwner && owner is not IRxUnsafe)
             {
                 throw new InvalidOperationException($"[RxFlag] {owner?.GetType().Name}는 RxFlag의 유효한 소유자가 아닙니다.");
             }

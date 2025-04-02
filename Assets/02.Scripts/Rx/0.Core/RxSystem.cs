@@ -23,22 +23,15 @@ namespace Akasha
         IDisposable Bind(Action subscriber, object context);
     }
 
-    public interface IRxReadable<T>
-    {
-        T Value { get; }
-    }
-
-    public interface IRxWritable<T>
-    {
-        void SetValue(T value, object caller);
-    }
+    public interface IRxReadable<T> { T Value { get; } }
+    public interface IRxWritable<T> { void SetValue(T value, object caller); }
     public interface IRxDynamicSubscribable
     {
         void SubscribeByObject(Action<object> callback, object context, RxType type);
         void UnsubscribeByObject(Action<object> callback);
     }
     public interface IRxSubscribable { }
-    public interface IRxSubscribable<T>: IRxSubscribable
+    public interface IRxSubscribable<T> : IRxSubscribable
     {
         void SubscribeLaw(Action<T> subscriber, object context, RxType relationType);
         void UnsubscribeLaw(Action<T> subscriber);
@@ -46,13 +39,19 @@ namespace Akasha
     public interface IRxObservable { }
     public interface IRxObservable<T> : IRxReadable<T>, IRxSubscribable<T>, IRxObservable { }
 
-    // ----- Subscriber Role Interfaces -----
+    // ----- Ownership Marker Interfaces -----
 
-    public interface IFunctionalSubscriber { } // RxExpr, RxFlag 구독 가능
-    public interface IInteractLogicalSubscriber { } // RxVar, RxList 구독 가능
-    public interface IGlobalLogicalSubscriber { } // 모든 Logical 구독 가능 (Manager, Widget 등)
+    public interface IRxFieldOwner { }
+    public interface IRxExprOwner : IRxFieldOwner { }
+    public interface ILocalEventOwner { }
+    public interface IGlobalEventOwner { }
 
-    // ----- Event Subscriber -----
+    // ----- Field Subscriber Role Interfaces -----
+
+    public interface IFiniteFieldSubscriber { }
+    public interface IUnfiniteFieldSubscriber { }
+
+    // ----- Event Subscriber Role Interfaces -----
 
     public interface IFiniteTriggerSubscriber { }
     public interface IUnfiniteTriggerSubscriber { }
@@ -60,222 +59,19 @@ namespace Akasha
     public interface IUnfiniteLocalEventSubscriber { }
     public interface IGlobalEventSubscriber { }
 
-    // ----- Ownership Marker Interfaces -----
+    // ----- Object Identity Marker Interfaces -----
 
-    public interface IRxModel { }
-    public interface IRxStateMachine { }
-    public interface IRxFlagger { }
-    public interface IScreen { }
+    public interface IRxModel : IRxExprOwner, IFiniteFieldSubscriber { }
+    public interface IRxStateMachine : IRxExprOwner, IFiniteFieldSubscriber, IFiniteTriggerSubscriber, IFiniteLocalEventSubscriber, ILocalEventOwner { }
+    public interface IScreen : IRxFieldOwner { }
     public interface IRxUnsafe { }
 
     public interface IInteractor { }
-    public interface IManager { }
-    public interface IPresenter { }
+    public interface IManager : IRxExprOwner, IUnfiniteFieldSubscriber, IUnfiniteTriggerSubscriber, IUnfiniteLocalEventSubscriber, IGlobalEventOwner, IGlobalEventSubscriber { }
+    public interface IPresenter : IUnfiniteFieldSubscriber, IUnfiniteLocalEventSubscriber, IGlobalEventSubscriber { }
 
-    // ----- Binding System -----
-
-    public static class RxBinder
-    {
-        private static readonly Dictionary<object, List<IDisposable>> _bindings = new();
-
-        public static IDisposable Bind<T>(IRxReadable<T> source, Action<T> apply, object context)
-        {
-            if (source is not IRxSubscribable<T> subscribable)
-                throw new InvalidOperationException("[RxBind] 해당 RxReadable은 구독할 수 없습니다.");
-
-            void Callback(T value) => apply?.Invoke(value);
-
-            subscribable.SubscribeLaw(Callback, context, RxType.Logical);
-
-            var disposable = new SubscriptionDisposable<T>(subscribable, Callback);
-
-            if (!_bindings.ContainsKey(context))
-                _bindings[context] = new List<IDisposable>();
-
-            _bindings[context].Add(disposable);
-            return disposable;
-        }
-
-        public static IDisposable BindEach<T>(
-            RxList<T> list,
-            Action<T> onAdd,
-            Action<T> onRemove = null,
-            object context = null
-        )
-        {
-            void DeltaHandler(ListDelta<T> delta)
-            {
-                switch (delta)
-                {
-                    case ListDelta<T>.Add add:
-                        onAdd?.Invoke(add.Item);
-                        break;
-                    case ListDelta<T>.Insert insert:
-                        onAdd?.Invoke(insert.Item);
-                        break;
-                    case ListDelta<T>.Remove remove:
-                        onRemove?.Invoke(remove.Item);
-                        break;
-                    case ListDelta<T>.RemoveAt removeAt:
-                        onRemove?.Invoke(removeAt.Item);
-                        break;
-                    case ListDelta<T>.Replace replace:
-                        onRemove?.Invoke(replace.OldItem);
-                        onAdd?.Invoke(replace.NewItem);
-                        break;
-                    case ListDelta<T>.Clear:
-                        break;
-                }
-            }
-
-            list.SubscribeDelta(DeltaHandler, context, RxType.Logical);
-
-            var disposable = new DeltaDisposable<T>(list, DeltaHandler);
-
-            if (!_bindings.ContainsKey(context))
-                _bindings[context] = new List<IDisposable>();
-
-            _bindings[context].Add(disposable);
-            return disposable;
-        }
-
-        public static void UnbindAll(object context)
-        {
-            if (_bindings.TryGetValue(context, out var list))
-            {
-                foreach (var disposable in list)
-                    disposable.Dispose();
-
-                _bindings.Remove(context);
-            }
-        }
-    }
-
-    public static class RxValidator
-    {
-        public static object? FindReactiveRoot(object obj)
-        {
-            if (obj is RxContextBehaviour context)
-                return context.ReactiveRoot;
-
-            return LegacyFindByTransform(obj);
-        }
-
-        private static object? LegacyFindByTransform(object obj)
-        {
-            var current = obj as Component;
-            while (current != null)
-            {
-                if (current.GetComponent<BaseController>() != null)
-                    return current.GetComponent<BaseController>();
-                if (current.GetComponent<BasePresenter>() != null)
-                    return current.GetComponent<BasePresenter>();
-                current = current.transform.parent?.GetComponent<MonoBehaviour>();
-            }
-            return null;
-        }
-
-        // ✅ 필드(RxVar, RxExpr, RxFlag 등) 구독 권한 검사
-        public static void ValidateFieldSubscriber(object context, object? fieldOwner)
-        {
-            string contextName = context?.GetType().Name ?? "(null)";
-            string ownerName = fieldOwner?.GetType().Name ?? "(null)";
-
-            bool hasAccess =
-                context is IFunctionalSubscriber ||
-                context is IInteractLogicalSubscriber ||
-                context is IGlobalLogicalSubscriber ||
-                context is IRxUnsafe ||
-                context is IRxComputed; // RxExpr, RxFlag 포함
-
-            if (!hasAccess)
-            {
-                throw new InvalidOperationException(
-                    $"[RxValidator] {contextName}는 Rx 객체를 구독할 권한이 없습니다.");
-            }
-
-            // UnLocal 차단 (동일 기준 내에서만 허용)
-            if (context is IInteractLogicalSubscriber &&
-                context is not IGlobalLogicalSubscriber &&
-                context is not IRxUnsafe)
-            {
-                var contextRoot = FindReactiveRoot(context);
-                var ownerRoot = FindReactiveRoot(fieldOwner);
-
-                if (ownerRoot is IManager)
-                    return;
-
-                if (contextRoot != null && ownerRoot != null && contextRoot != ownerRoot)
-                {
-                    throw new InvalidOperationException(
-                        $"[RxValidator] {contextName}는 {ownerName}의 Rx 객체를 UnLocal 구독할 수 없습니다.\n" +
-                        $"↳ 기준 불일치: {contextRoot?.GetType().Name} vs {ownerRoot?.GetType().Name}");
-                }
-            }
-        }
-
-        // ✅ 이벤트(RxTrigger, RxLocalEvent, RxGlobalEvent 등) 구독 권한 검사
-        public static void ValidateEventSubscriber(object context, object? eventOwner)
-        {
-            string contextName = context?.GetType().Name ?? "(null)";
-            string ownerName = eventOwner?.GetType().Name ?? "(null)";
-
-            // RxExpr, RxFlag는 이벤트 구독 금지
-            if (context is IRxComputed)
-            {
-                throw new InvalidOperationException($"[RxValidator] {contextName}는 이벤트를 구독할 수 없습니다.");
-            }
-
-            bool hasAccess =
-                context is IFiniteTriggerSubscriber ||
-                context is IUnfiniteTriggerSubscriber ||
-                context is IFiniteLocalEventSubscriber ||
-                context is IUnfiniteLocalEventSubscriber ||
-                context is IGlobalEventSubscriber ||
-                context is IRxUnsafe;
-
-            if (!hasAccess)
-            {
-                throw new InvalidOperationException(
-                    $"[RxValidator] {contextName}는 이벤트를 구독할 권한이 없습니다.");
-            }
-
-            // UnLocal 차단 (Finite 이벤트 구독자에 한함)
-            bool isFinite =
-                context is IFiniteTriggerSubscriber ||
-                context is IFiniteLocalEventSubscriber;
-
-            bool isUnprotected =
-                context is not IUnfiniteTriggerSubscriber &&
-                context is not IUnfiniteLocalEventSubscriber &&
-                context is not IRxUnsafe;
-
-            if (isFinite && isUnprotected)
-            {
-                var contextRoot = FindReactiveRoot(context);
-                var ownerRoot = FindReactiveRoot(eventOwner);
-
-                if (contextRoot != null && ownerRoot != null && contextRoot != ownerRoot)
-                {
-                    throw new InvalidOperationException(
-                        $"[RxValidator] {contextName}는 {ownerName}의 이벤트를 UnLocal 구독할 수 없습니다.\n" +
-                        $"↳ 기준 불일치: {contextRoot?.GetType().Name} vs {ownerRoot?.GetType().Name}");
-                }
-            }
-        }
-    }
-
-    public static class RxEventDisposable
-    {
-        public static IDisposable Create(IRxEvent rxEvent, Action subscriber, object context)
-        {
-            rxEvent.Subscribe(subscriber, context, RxType.Logical);
-            return new SubscriptionDisposable<Unit>(
-                (IRxSubscribable<Unit>)rxEvent,
-                _ => subscriber()
-            );
-        }
-    }
+    public interface IWidget : IRxFieldOwner, IUnfiniteTriggerSubscriber, IUnfiniteLocalEventSubscriber, IGlobalEventSubscriber { }
+    public interface IGoldbug : IRxFieldOwner, IUnfiniteTriggerSubscriber, IUnfiniteLocalEventSubscriber, IGlobalEventSubscriber { }
 
     // ----- Execution Queue -----
 
@@ -314,7 +110,7 @@ namespace Akasha
                 try { action(); }
                 catch (Exception e)
                 {
-                    UnityEngine.Debug.LogError($"[RxQueue] 작업 실행 중 오류: {e.Message}\n{e.StackTrace}");
+                    Debug.LogError($"[RxQueue] 작업 실행 중 오류: {e.Message}\n{e.StackTrace}");
                 }
             }
         }
@@ -414,7 +210,21 @@ namespace Akasha
         }
     }
 
-    // ----- Subscription Logic -----
+    // ----- Event Binding Helper -----
+
+    public static class RxEventDisposable
+    {
+        public static IDisposable Create(IRxEvent rxEvent, Action subscriber, object context)
+        {
+            rxEvent.Subscribe(subscriber, context, RxType.Logical);
+            return new SubscriptionDisposable<Unit>(
+                (IRxSubscribable<Unit>)rxEvent,
+                _ => subscriber()
+            );
+        }
+    }
+
+    // ----- Subscription Core -----
 
     public class RxSubscription<T>
     {
@@ -448,6 +258,7 @@ namespace Akasha
             }
             foreach (var key in keysToRemove) _subscribers.Remove(key);
         }
+
         public void Remove(Action<T> subscriber, object context)
         {
             if (_subscribers.TryGetValue(context, out var list))
@@ -468,7 +279,6 @@ namespace Akasha
         public int SubscriberCount => _subscribers.Sum(kvp => kvp.Value.Count);
     }
 
-
     public class RxSubscription : RxSubscription<Unit>, IRxSubscribable<Unit>
     {
         public void Add(Action subscriber, object context, RxType relationType)
@@ -480,7 +290,6 @@ namespace Akasha
         public void NotifyAll()
             => NotifyAll(Unit.Default);
 
-        // IRxSubscribable<Unit> 명시적 구현
         void IRxSubscribable<Unit>.SubscribeLaw(Action<Unit> subscriber, object context, RxType relationType)
             => Add(subscriber, context, relationType);
 
@@ -489,4 +298,83 @@ namespace Akasha
     }
 
     public readonly struct Unit { public static readonly Unit Default = new(); }
+
+    // ----- Binding System -----
+
+    public static class RxBinder
+    {
+        private static readonly Dictionary<object, List<IDisposable>> _bindings = new();
+
+        public static IDisposable Bind<T>(IRxReadable<T> source, Action<T> apply, object context)
+        {
+            if (source is not IRxSubscribable<T> subscribable)
+                throw new InvalidOperationException("[RxBind] 해당 RxReadable은 구독할 수 없습니다.");
+
+            void Callback(T value) => apply?.Invoke(value);
+
+            subscribable.SubscribeLaw(Callback, context, RxType.Logical);
+
+            var disposable = new SubscriptionDisposable<T>(subscribable, Callback);
+
+            if (!_bindings.ContainsKey(context))
+                _bindings[context] = new List<IDisposable>();
+
+            _bindings[context].Add(disposable);
+            return disposable;
+        }
+
+        public static IDisposable BindEach<T>(
+            RxList<T> list,
+            Action<T> onAdd,
+            Action<T> onRemove = null,
+            object context = null
+        )
+        {
+            void DeltaHandler(ListDelta<T> delta)
+            {
+                switch (delta)
+                {
+                    case ListDelta<T>.Add add:
+                        onAdd?.Invoke(add.Item);
+                        break;
+                    case ListDelta<T>.Insert insert:
+                        onAdd?.Invoke(insert.Item);
+                        break;
+                    case ListDelta<T>.Remove remove:
+                        onRemove?.Invoke(remove.Item);
+                        break;
+                    case ListDelta<T>.RemoveAt removeAt:
+                        onRemove?.Invoke(removeAt.Item);
+                        break;
+                    case ListDelta<T>.Replace replace:
+                        onRemove?.Invoke(replace.OldItem);
+                        onAdd?.Invoke(replace.NewItem);
+                        break;
+                    case ListDelta<T>.Clear:
+                        break;
+                }
+            }
+
+            list.SubscribeDelta(DeltaHandler, context, RxType.Logical);
+
+            var disposable = new DeltaDisposable<T>(list, DeltaHandler);
+
+            if (!_bindings.ContainsKey(context))
+                _bindings[context] = new List<IDisposable>();
+
+            _bindings[context].Add(disposable);
+            return disposable;
+        }
+
+        public static void UnbindAll(object context)
+        {
+            if (_bindings.TryGetValue(context, out var list))
+            {
+                foreach (var disposable in list)
+                    disposable.Dispose();
+
+                _bindings.Remove(context);
+            }
+        }
+    }
 }
