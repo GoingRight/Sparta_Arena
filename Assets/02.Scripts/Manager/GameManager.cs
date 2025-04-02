@@ -6,7 +6,18 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public Player player;
-
+    private EnemyBoss boss;
+    public EnemyBoss Boss
+    {
+        get { return boss; }
+        set
+        {
+            boss = value;
+            UIManager.Instance.mainUI.bossNameTxt.text = Boss.bossName;
+            UIManager.Instance.mainUI.SetBossHPBar();
+            UIManager.Instance.mainUI.bossInfo.SetActive(true);
+        }
+    }
     private void Awake()
     {
         if (Instance == null)
