@@ -94,7 +94,7 @@ public class MobStateMachine : RxStateMachine<MobState>
             return;
 
         float speed = new Vector3(moveDir.x, 0f, moveDir.z).magnitude;
-
+        Debug.Log($"[MobStateMachine] speed = {speed}, threshold = {walkThreshold}/{runThreshold}");
         if (speed > runThreshold)
             Request(MobState.Run);
         else if (speed > walkThreshold)
