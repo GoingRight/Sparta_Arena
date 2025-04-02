@@ -12,9 +12,10 @@ public abstract class EnemyBase : Character
     protected abstract void Move();
     protected abstract void FindPlayer();
     protected abstract void Attack();
-    protected virtual void OnCollisionEnter(Collision collision)
+
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Weapon"))
+        if (other.gameObject.CompareTag("Weapon"))
         {
             float damage = GameManager.Instance.player.stat.Attack;
             TakeDamage(damage);

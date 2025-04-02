@@ -52,4 +52,10 @@ public class Player : Character
             TakeDamage(damage);
         }
     }
+
+    protected override void TakeDamage(float damage)
+    {
+        base.TakeDamage(damage);
+        UIManager.Instance.mainUI.SetPlayerHPBar();
+    }
 }
