@@ -4,10 +4,10 @@ namespace Akasha
 {
     /// <summary>
     /// Entity와 Interactor를 함께 제어하는 게임 로직 중심 컨트롤러입니다.
-    /// 상향식 인터랙션을 받아 해석하고, Entity에 명령을 전달합니다.
+    /// 명령을 받아 동작하고 Entity에 명령을 전달합니다.
     /// </summary>
     public abstract class BaseController : RxContextBehaviour { }
-    public abstract class BaseController<TEntity> : BaseController, IFiniteLocalEventSubscriber, IGlobalEventSubscriber
+    public abstract class BaseController<TEntity> : BaseController, IFiniteLocalEventSubscriber, IGlobalEventSubscriber, IRxStateMachine
         where TEntity : BaseEntity
     {
         [SerializeField] private TEntity? entity;
@@ -16,11 +16,8 @@ namespace Akasha
         public TEntity? Entity => entity;
         public BaseInteractor? Interactor => interactor;
 
-        #region --- Unity Hook ---
-
         protected override void OnInit()
         {
-
             foreach (var child in GetComponentsInChildren<RxContextBehaviour>())
             {
                 child.InjectControllerContext(this);
@@ -31,16 +28,7 @@ namespace Akasha
 
             if (entity != null) OnEntityInjected();
             if (interactor != null) OnInteractorInjected();
-
-            SetupLogic();
         }
-
-        protected virtual void OnEnable() => OnControllerEnable();
-        protected virtual void OnDisable() => OnControllerDisable();
-
-        #endregion
-
-        #region --- Injection API ---
 
         public void InjectEntity(TEntity entity)
         {
@@ -54,16 +42,7 @@ namespace Akasha
             OnInteractorInjected();
         }
 
-        #endregion
-
-        #region --- Overridable Hooks ---
-
         protected virtual void OnEntityInjected() { }
         protected virtual void OnInteractorInjected() { }
-        protected virtual void SetupLogic() { }
-        protected virtual void OnControllerEnable() { }
-        protected virtual void OnControllerDisable() { }
-
-        #endregion
     }
 }

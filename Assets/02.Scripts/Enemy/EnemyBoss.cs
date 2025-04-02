@@ -6,5 +6,4 @@ using UnityEngine;
 public abstract class EnemyBoss : EnemyBase
 {
     protected int bossPhase;
-    public string bossName;
 }

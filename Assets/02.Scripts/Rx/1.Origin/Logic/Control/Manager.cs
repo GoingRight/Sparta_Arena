@@ -2,7 +2,12 @@ using UnityEngine;
 
 namespace Akasha
 {
-    public abstract class Manager<T> : RxContextBehaviour, IManager, IGlobalLogicalSubscriber, IGlobalEventSubscriber, IUnfiniteTriggerSubscriber, IUnfiniteLocalEventSubscriber
+    public abstract class Manager<T> : RxContextBehaviour,
+        IManager,
+        IGlobalLogicalSubscriber,
+        IGlobalEventSubscriber,
+        IUnfiniteTriggerSubscriber,
+        IUnfiniteLocalEventSubscriber
         where T : Manager<T>
     {
         private static T? instance;
@@ -21,6 +26,8 @@ namespace Akasha
                         instance = singleton.AddComponent<T>();
                     }
                 }
+
+                instance.InitIfNeeded();
                 return instance!;
             }
         }
@@ -28,8 +35,11 @@ namespace Akasha
         public static bool IsInstance => instance != null;
         protected virtual bool IsPersistent => true;
 
-        protected virtual void Awake()
+        public bool isInitialized = false;
+
+        protected override void Awake()
         {
+            base.Awake();
             if (instance == null)
             {
                 instance = (T)this;
@@ -37,47 +47,25 @@ namespace Akasha
                 if (IsPersistent)
                     DontDestroyOnLoad(gameObject);
             }
-            else
+            else if (instance != this)
             {
                 Destroy(gameObject);
                 return;
             }
+            InitIfNeeded();
+        }
 
-            // RxContext 초기화 전에 수행됨
+        public void InitIfNeeded()
+        {
+            if (isInitialized) return;
+
             OnSetup();
-        }
+            OnInitialize();
 
-        protected override void OnInit()
-        {
-            RegisterGlobalEvents();
-            SetupGlobalBindings();
-            HandleGlobalLogic();
-            OnManagerInitialized();
-        }
-
-        protected virtual void OnEnable() => OnActivate();
-        protected virtual void OnDisable() => OnDeactivate();
-
-        protected override void OnDispose()
-        {
-            base.OnDispose();
-            OnTeardown();
+            isInitialized = true;
         }
 
         protected virtual void OnSetup() { }
-        
-        protected virtual void OnManagerInitialized() { }
-
-        protected virtual void RegisterGlobalEvents() { }
-
-        protected virtual void SetupGlobalBindings() { }
-
-        protected virtual void HandleGlobalLogic() { }
-
-        protected virtual void OnTeardown() { }
-
-        protected virtual void OnActivate() { }
-
-        protected virtual void OnDeactivate() { }
+        protected virtual void OnInitialize() { }
     }
 }

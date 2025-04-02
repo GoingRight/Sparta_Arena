@@ -4,36 +4,37 @@ using UnityEngine;
 public class AndroidMobEntity : BaseEntity
 {
     private AndroidMobModel model;
-    // --- 모델 래핑 프로퍼티 ---
+    public MobStateMachine stateMachine;
+
     private StrategyType Strategy
     {
         get => model.Strategy.Value;
-        set => model.Strategy.SetValue(value, this);
+        set => model.Strategy.SetValue(value, model);
     }
 
     private DanceType Dance
     {
         get => model.Dance.Value;
-        set => model.Dance.SetValue(value, this);
+        set => model.Dance.SetValue(value, model);
     }
 
     protected override void SetupModels()
     {
         model = new AndroidMobModel();
         model.Setup(this);
-
         MobManager.Instance.Register(model);
     }
 
     protected override void SetupParts()
     {
-        var group = MobManager.Instance.GroupStatus;
+        stateMachine = new MobStateMachine(this, () => transform.position); // ✅ 새 구조: 생성자에서 상태 등록
 
+        BindStrategyToState();
+
+        var group = MobManager.Instance.GroupStatus;
         RxBinder.Bind(group.AvgHealth, _ => EvaluateStrategy(group), this);
         RxBinder.Bind(group.UnderAttack, _ => EvaluateStrategy(group), this);
     }
-
-    // --- 전략 판단 로직 ---
 
     private void EvaluateStrategy(MobGroupStatusModel status)
     {
@@ -45,13 +46,26 @@ public class AndroidMobEntity : BaseEntity
             Dance = DanceType.Buff;
 
         Strategy = StrategyType.Defend;
-
-        PerformDance();
+        RequestDanceState();
     }
 
-    private void PerformDance()
+    private void RequestDanceState()
     {
-        Debug.Log($"[AndroidMobEntity] 전략 댄스 실행: {Dance}");
-        // TODO: 애니메이션, 이펙트 처리
+        switch (Dance)
+        {
+            case DanceType.Heal:
+            case DanceType.Buff:
+                stateMachine.Request(MobState.Buff); // ✅ 이름 변경
+                break;
+            case DanceType.Debuff:
+                stateMachine.Request(MobState.Debuff); // ✅ 이름 변경
+                break;
+        }
+    }
+
+    private void BindStrategyToState()
+    {
+        // 필요시 상태 변화 바인딩 예:
+        // stateMachine.ActiveState.Bind(state => { ... }, this, RxType.Functional);
     }
 }

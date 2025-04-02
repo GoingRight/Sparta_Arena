@@ -12,12 +12,6 @@ namespace Akasha
         {
             if (_presenter == null)
                 _presenter = GetComponent<BasePresenter>();
-
-            RegisterFields();
-            OnScreenInitialized();
         }
-
-        protected virtual void RegisterFields() { }
-        protected virtual void OnScreenInitialized() { }
     }
 }

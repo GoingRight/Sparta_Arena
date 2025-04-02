@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Akasha
 {
@@ -21,6 +22,7 @@ namespace Akasha
 
         public void SetValue(T newValue, object caller)
         {
+            Debug.Log($"[RxVar] SetValue 요청: 현재 = {_value}, 새값 = {newValue}");
             if (!IsAuthorized(caller))
                 throw new InvalidOperationException($"[RxVar.SetValue] {caller?.GetType().Name}는 RxVar의 값을 변경할 권한이 없습니다.");
 
@@ -30,10 +32,8 @@ namespace Akasha
 
                 RxQueue.Enqueue(() =>
                 {
-                    this.WithContext(() =>
-                    {
-                        _subscription.NotifyAll(_value);
-                    });
+                    Debug.Log($"[RxVar] NotifyAll 실행 for {_value}");
+                    this.WithContext(() => _subscription.NotifyAll(_value));
                 }, this);
             }
         }
@@ -50,6 +50,7 @@ namespace Akasha
 
             RxValidator.ValidateFieldSubscriber(context, _owner);
             _subscription.Add(subscriber, context, relationType);
+            subscriber(_value);
         }
 
         public IDisposable Bind(Action<T> subscriber, object context, RxType relationType)

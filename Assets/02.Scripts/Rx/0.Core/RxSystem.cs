@@ -415,8 +415,8 @@ namespace Akasha
     }
 
     // ----- Subscription Logic -----
-    
-    internal class RxSubscription<T>
+
+    public class RxSubscription<T>
     {
         private readonly Dictionary<object, List<Subscriber>> _subscribers = new();
 
@@ -469,7 +469,7 @@ namespace Akasha
     }
 
 
-    internal class RxSubscription : RxSubscription<Unit>, IRxSubscribable<Unit>
+    public class RxSubscription : RxSubscription<Unit>, IRxSubscribable<Unit>
     {
         public void Add(Action subscriber, object context, RxType relationType)
             => Add(_ => subscriber(), context, relationType);
