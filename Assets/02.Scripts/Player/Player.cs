@@ -11,6 +11,7 @@ public class Player : Character
 
     public Action detectTakeDamage;
 
+    public GameObject FeetParticle;
     public Animator Animator { get; private set; }
     public PlayerController Input { get; private set; }
     public Rigidbody RigidBody { get; private set; }
@@ -47,7 +48,7 @@ public class Player : Character
     {
         if(collision.gameObject.CompareTag("Enemy"))
         {
-            Character collisionOBJ = collision.gameObject.GetComponent<Character>();
+            Character collisionOBJ = collision.gameObject.GetComponentInParent<Character>();
             float damage = collisionOBJ.stat.Attack;
             TakeDamage(damage);
         }
@@ -57,5 +58,6 @@ public class Player : Character
     {
         base.TakeDamage(damage);
         UIManager.Instance.mainUI.SetPlayerHPBar();
+        detectTakeDamage?.Invoke();
     }
 }

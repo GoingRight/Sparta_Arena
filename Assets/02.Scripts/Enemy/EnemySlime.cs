@@ -81,7 +81,7 @@ public class EnemySlime : EnemyMob
     protected override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
-        if(stat.CurrentHP < 0)
+        if(stat.CurrentHP <= 0)
         {
             Die();
         }

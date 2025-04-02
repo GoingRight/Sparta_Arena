@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 8801354722197659750}
   - component: {fileID: 3470353878812274587}
   - component: {fileID: 1220994769382233454}
-  - component: {fileID: 8363336488442371799}
   m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
@@ -85,27 +84,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8363336488442371799
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2119638726203284139}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.85, y: 1.3139645, z: 4.34}
-  m_Center: {x: 0, y: 0.6580178, z: -0.018977165}
 --- !u!1 &2669908281794329739
 GameObject:
   m_ObjectHideFlags: 0
@@ -779,9 +757,10 @@ GameObject:
   - component: {fileID: 4071787921495381480}
   - component: {fileID: 57693320503104333}
   - component: {fileID: 4979315577995641468}
+  - component: {fileID: 5905008347583427553}
   m_Layer: 0
   m_Name: Free Racing Car
-  m_TagString: TouchDamageMonster
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -861,6 +840,27 @@ MonoBehaviour:
   flashAngle: 60
   myCol: {fileID: 0}
   playerCol: {fileID: 0}
+--- !u!65 &5905008347583427553
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5965277870118672986}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.85, y: 1.3139645, z: 4.34}
+  m_Center: {x: 0, y: 0.6580178, z: -0.018977165}
 --- !u!1 &6098134859796631787
 GameObject:
   m_ObjectHideFlags: 0
