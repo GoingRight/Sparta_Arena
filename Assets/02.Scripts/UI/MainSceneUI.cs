@@ -17,6 +17,7 @@ public class MainSceneUI : MonoBehaviour
     private void Start()
     {
         UIManager.Instance.mainUI = this;
+        WaveManager.Instance.OnSceneLoded();
     }
 
     public void SetPlayerHPBar()

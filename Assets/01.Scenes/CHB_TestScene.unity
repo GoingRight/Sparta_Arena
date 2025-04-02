@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 331454628}
   m_Layer: 3
   m_Name: TestPlayer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1487,7 +1487,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waves:
   - {fileID: 11400000, guid: 0605f97b566bdba42bb31217dfc65545, type: 2}
+  - {fileID: 11400000, guid: 67bd1e3ebde7f124181180a58ae06454, type: 2}
+  - {fileID: 11400000, guid: 3f56bd1dad47b6547b7e931dbdd4f824, type: 2}
   waveLength: 1
+  monsterCount: 0
   curWaveIndex: 0
   spawnPosition: {fileID: 1480083794}
 --- !u!4 &1397773056
@@ -1536,7 +1539,7 @@ Transform:
   m_GameObject: {fileID: 1480083793}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 13.48, y: 0, z: -3.68}
+  m_LocalPosition: {x: 21.92, y: 0, z: -3.68}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2557,7 +2560,7 @@ Transform:
   m_GameObject: {fileID: 5603950713800875287}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: -0.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2704,7 +2707,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LeftDoor: {fileID: 1788194065}
   RightDoor: {fileID: 30884843}
-  isOpen: 0
+  isOpen: 1
 --- !u!4 &6605547427212400874
 Transform:
   m_ObjectHideFlags: 0

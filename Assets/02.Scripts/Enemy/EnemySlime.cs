@@ -81,8 +81,18 @@ public class EnemySlime : EnemyMob
     protected override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
+        if(stat.CurrentHP < 0)
+        {
+            Die();
+        }
         IsMove = false;
         animator.SetTrigger(SlimeAnimationData.DamageParameterHash);
+    }
+
+    public void Die()
+    {
+        WaveManager.Instance.SubtractMonsterCount();
+        Destroy(this.gameObject);
     }
 
     protected override void Attack()
@@ -131,7 +141,9 @@ public class EnemySlime : EnemyMob
 
     public void Duplicate()
     {
-        EnemySlime replica = Instantiate(this.gameObject).GetComponent<EnemySlime>();
+        if (WaveManager.Instance.monsterCount > 10) return;
+        EnemySlime replica = Instantiate(this.gameObject, WaveManager.Instance.spawnPosition).GetComponent<EnemySlime>();
+        WaveManager.Instance.monsterCount++;
         replica.transform.position = transform.position + transform.right*2;
         replica.stat = this.stat;
     }
