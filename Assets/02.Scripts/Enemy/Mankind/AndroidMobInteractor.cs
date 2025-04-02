@@ -9,7 +9,18 @@ public class AndroidMobInteractor : BaseInteractor<AndroidMobEntity>
     [SerializeField] private Animator animator;
     public Text stateTxt;
     private MobStateMachine State => Entity?.stateMachine;
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.H)) PlayTestAnim(MobState.Heal);
+        if (Input.GetKeyDown(KeyCode.B)) PlayTestAnim(MobState.Buff);
+        if (Input.GetKeyDown(KeyCode.D)) PlayTestAnim(MobState.Debuff);
+    }
 
+    private void PlayTestAnim(MobState state)
+    {
+        animator.Play(state.ToString()); // 단, 상태 이름과 클립 이름이 일치해야 함
+        Debug.Log($"[Test] 재생 요청: {state}");
+    }
     private void Start()
     {
         stateTxt = GetComponentInChildren<Text>();
