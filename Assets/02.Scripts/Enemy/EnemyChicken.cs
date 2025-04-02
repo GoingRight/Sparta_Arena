@@ -65,7 +65,7 @@ public class EnemyChicken : EnemyBoss
         if (isBoss) // 보스 확인
         {
             bossPhase = 1;
-            detectRange *= 2f;
+            detectRange += 2f;
             attackRange += 1f;
             transform.localScale *= 4f;
             stat.Attack *= 5f;
