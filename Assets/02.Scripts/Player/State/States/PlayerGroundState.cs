@@ -36,7 +36,11 @@ public class PlayerGroundState : PlayerBaseState
         base.Update();
 
         if (stateMachine.isAttacking)
+        {
             OnAttack();
+            return;
+        }
+
     }
 
     void OnAttack()

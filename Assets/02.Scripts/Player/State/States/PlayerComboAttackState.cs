@@ -15,7 +15,7 @@ public class PlayerComboAttackState : PlayerMeleeState
     {
         Debug.Log("Combo Attack State");
         base.Enter();
-        StartAnimation(stateMachine.Player.AnimationData.MeleeAttackParameterHash);
+        StartAnimation(stateMachine.Player.AnimationData.ComboAttackParameterHash); 
 
         alreadyAppliedCombo = false;
         alreadyApplyForce = false;
@@ -28,7 +28,7 @@ public class PlayerComboAttackState : PlayerMeleeState
     public override void Exit()
     {
         base.Exit();
-        StopAnimation(stateMachine.Player.AnimationData.MeleeAttackParameterHash);
+        StopAnimation(stateMachine.Player.AnimationData.ComboAttackParameterHash);
 
         if (!alreadyAppliedCombo)
         {

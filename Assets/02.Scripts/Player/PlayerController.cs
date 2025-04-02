@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
@@ -27,12 +28,14 @@ public class PlayerController : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         player = GetComponent<Player>() ?? throw new NullReferenceException($"player 클래스를 가지지 않음 : {this.gameObject.name}");
         jumpForce = player.Data.AirData.JumpForce;
+
+        if (characterModel == null)
+            characterModel = transform.GetChild(0);
     }
 
     private void FixedUpdate()
     {
         Move();
-        RotateCharacterModel();
         isGrounded = Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z), Vector3.down, 1.5f, groundMask);
     }
 
@@ -59,7 +62,7 @@ public class PlayerController : MonoBehaviour
 
         // 이동 방향 계산
         Vector3 moveDirection = (camForward * curMoveInput.y + camRight * curMoveInput.x).normalized;
-
+        
         // 속도 적용
         speed = isSprint ? player.RunSpeed : player.stat.Speed;
         speed = player.stateMachine.isAttacking ? 0 : speed;
@@ -67,26 +70,9 @@ public class PlayerController : MonoBehaviour
         velocity.y = _rigidbody.velocity.y;
 
         _rigidbody.velocity = velocity;
-    }
 
-    private void RotateCharacterModel()
-    {
-        if (characterModel == null || curMoveInput.magnitude < 0.1f) return;
-
-        // 카메라 기준 이동 방향 계산
-        Vector3 camForward = camPivot.forward;
-        Vector3 camRight = camPivot.right;
-
-        camForward.y = 0;
-        camRight.y = 0;
-        camForward.Normalize();
-        camRight.Normalize();
-
-        Vector3 moveDirection = (camForward * curMoveInput.y + camRight * curMoveInput.x).normalized;
-
-        // 이동 방향으로 부드럽게 회전
-        Quaternion targetRotation = Quaternion.LookRotation(moveDirection);
-        characterModel.rotation = Quaternion.Slerp(characterModel.rotation, targetRotation, rotationSpeed * Time.fixedDeltaTime);
+        if (moveDirection != Vector3.zero)
+            characterModel.rotation = Quaternion.LookRotation(moveDirection);
     }
 
     public void OnSprint(InputAction.CallbackContext context)
