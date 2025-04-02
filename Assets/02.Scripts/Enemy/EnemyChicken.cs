@@ -69,7 +69,7 @@ public class EnemyChicken : EnemyBoss
             bossPhase = 1;
             detectRange += 2f;
             attackRange += 1f;
-            transform.localScale *= 4f;
+            transform.localScale *= 3f;
             stat.Attack *= 5f;
             stat.Speed += 1.5f;
             baseSpeed = stat.Speed;
