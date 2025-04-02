@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1105 &110500000
+HumanTemplate:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Mapping
+  m_BoneTemplate:
+    Chest: Chest
+    Head: Head
+    Hips: Hip
+    Left Index Distal: IndexFinger2L_end
+    Left Index Intermediate: IndexFinger2L
+    Left Index Proximal: IndexFinger1L
+    Left Middle Distal: Fingers2L_end
+    Left Middle Intermediate: Fingers2L
+    Left Middle Proximal: Fingers1L
+    Left Thumb Distal: Thumb2_end
+    Left Thumb Intermediate: Thumb2
+    Left Thumb Proximal: Thumb1
+    LeftFoot: FootL
+    LeftHand: HandL
+    LeftLowerArm: LoweArmL
+    LeftLowerLeg: ShinL
+    LeftShoulder: ShoulderL
+    LeftToes: FootL_end
+    LeftUpperArm: UpperArmL
+    LeftUpperLeg: ThighL
+    Neck: Neck
+    Right Index Distal: IndexRinger2R_end
+    Right Index Intermediate: IndexRinger2R
+    Right Index Proximal: IndexFinger1R
+    Right Middle Distal: Fingers2R_end
+    Right Middle Intermediate: Fingers2R
+    Right Middle Proximal: Fingers1R
+    Right Thumb Distal: Thumb2R_end
+    Right Thumb Intermediate: Thumb2R
+    Right Thumb Proximal: Thumb1R
+    RightFoot: FootR
+    RightHand: HandR
+    RightLowerArm: LoweArmR
+    RightLowerLeg: ShinR
+    RightShoulder: ShoulderR
+    RightToes: FootR_end
+    RightUpperArm: UpperArmR
+    RightUpperLeg: ThighR
+    Spine: Spine

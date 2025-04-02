@@ -12,10 +12,12 @@ public class MainSceneUI : MonoBehaviour
     public TextMeshProUGUI bossNameTxt;
     public Image bossHPBar;
     public Image gameOverPanel;
+    public Image victoryUI;
 
     public Button restartBtn;
     private void Start()
     {
+        Time.timeScale = 1;
         UIManager.Instance.mainUI = this;
         WaveManager.Instance.OnSceneLoded();
     }

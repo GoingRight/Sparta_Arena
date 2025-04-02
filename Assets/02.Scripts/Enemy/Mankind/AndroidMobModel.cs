@@ -22,7 +22,7 @@ public class AndroidMobModel : RxModel, IMobHealthReadable
 
         CurrentHealth = new RxVar<float>(100f, this);
         Strategy = new RxVar<StrategyType>(StrategyType.Idle, this);
-        Dance = new RxVar<DanceType>(DanceType.Buff, this);
+        Dance = new RxVar<DanceType>(DanceType.BuffAll, this);
 
         HealthRatioExpr = new RxExpr<float>(
             () => Mathf.Clamp01(CurrentHealth.Value / 100f),

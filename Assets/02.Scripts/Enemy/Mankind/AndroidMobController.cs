@@ -5,8 +5,8 @@ using Akasha;
 public class AndroidMobController : BaseController<AndroidMobEntity>
 {
     [Header("Movement")]
-    public float MoveSpeed = 0.5f;
-    public float RunThreshold =1.5f;
+    public float MoveSpeed = 3f;
+    public float RunThreshold = 0.5f;
     public Vector3 MoveDirection;
 
     private Rigidbody _rb;

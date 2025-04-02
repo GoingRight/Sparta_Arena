@@ -58,6 +58,19 @@ public class Player : Character
     {
         base.TakeDamage(damage);
         UIManager.Instance.mainUI.SetPlayerHPBar();
+        if(stat.CurrentHP <= 0)
+        {
+            Die();
+        }
         detectTakeDamage?.Invoke();
+    }
+
+    public void Die()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        UIManager.Instance.mainUI.gameOverPanel.gameObject.SetActive(true);
+        Time.timeScale = 0;
+
+
     }
 }

@@ -3382,6 +3382,12 @@ PrefabInstance:
       propertyPath: jointItemR
       value: 
       objectReference: {fileID: 1660151311420655570}
+    - target: {fileID: 562046652074555055, guid: 2f6aa91814c3b4bcfa05cdee69d41169,
+        type: 3}
+      propertyPath: swordPrefab
+      value: 
+      objectReference: {fileID: 4334314812708720168, guid: edccbf15fadd9704cb7a2020a492b120,
+        type: 3}
     - target: {fileID: 2866036986567869087, guid: 2f6aa91814c3b4bcfa05cdee69d41169,
         type: 3}
       propertyPath: m_Name

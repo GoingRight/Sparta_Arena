@@ -146,6 +146,11 @@ public class EnemyChicken : EnemyBoss
         base.TakeDamage(damage);
         animController.TriggerHit();
 
+        if (isBoss)
+        {
+            UIManager.Instance.mainUI.SetBossHPBar();
+        }
+
         if (stat.CurrentHP <= 0)
         {
             Die();
@@ -359,20 +364,19 @@ public class EnemyChicken : EnemyBoss
     private void EnterPhase2() // 페이즈 전환
     {
         bossPhase = 2;
-        stat.Speed *= phase2Speed;
         stat.Attack *= phase2Damage;
-        baseSpeed = stat.Speed;
     }
 
     private void Die() // 죽었을 시
     {
         currentState = EnemyState.Dead;
         animController.SetDead(true);
-        GetComponent<Collider>().enabled = false;
+        WaveManager.Instance.SubtractMonsterCount();
         if (isBoss)
         {
             GameManager.Instance.Victory();
         }
+        Destroy(gameObject);
     }
     #endregion
 

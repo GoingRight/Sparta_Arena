@@ -573,9 +573,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stat:
     attack: 10
-    defence: 50
-    maxHP: 100
-    currentHP: 100
+    defence: 1
+    maxHP: 10
+    currentHP: 10
     speed: 1.5
   bossName: "\uB3D9\uBB3C\uBCF5\uC9C0 \uC778\uC99D \uB18D\uC7A5 \uB2ED"
   detectRange: 5
