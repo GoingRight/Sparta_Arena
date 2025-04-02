@@ -8,6 +8,7 @@ public class PlayerTakeDamagedState : PlayerGroundState
 
     public override void Enter()
     {
+        Debug.Log("TakeDamaged");
         base.Enter();
         StartAnimation(stateMachine.Player.AnimationData.TakeDamagedParameterHash);
     }
@@ -16,5 +17,15 @@ public class PlayerTakeDamagedState : PlayerGroundState
     {
         base.Exit();
         StopAnimation(stateMachine.Player.AnimationData.TakeDamagedParameterHash);
+    }
+
+    public override void Update()
+    {
+        base.Update();
+        if (IsAnimationFinished("TakeDamage"))
+        {
+            Debug.Log("TakeDamaged Finished");
+            stateMachine.ChangeState(stateMachine.IdleState);
+        }
     }
 }

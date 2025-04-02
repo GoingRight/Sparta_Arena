@@ -74,4 +74,11 @@ public class PlayerBaseState : IState
             return 0;
         }
     }
+
+    // 애니메이션 끝나는 지 체크
+    protected bool IsAnimationFinished(string tag, int layerIndex = 0)
+    {
+        AnimatorStateInfo stateInfo = stateMachine.Player.Animator.GetCurrentAnimatorStateInfo(layerIndex);
+        return stateInfo.IsTag(tag) && stateInfo.normalizedTime >= 0.99f;
+    }
 }
