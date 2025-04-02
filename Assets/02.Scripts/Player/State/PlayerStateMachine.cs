@@ -32,6 +32,7 @@ public class PlayerStateMachine : StateMachine
 
         JumpState = new PlayerJumpState(this);
         FallState = new PlayerFallState(this);
+
         ComboAttackState = new PlayerComboAttackState(this);
 
         RotationDamping = player.Data.GroundData.BaseRotationDamping;

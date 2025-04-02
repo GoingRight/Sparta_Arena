@@ -24,7 +24,7 @@ public class PlayerIdleState : PlayerGroundState
         base.Update();
         if (stateMachine.PlayerController.ReturnMoveInput() != Vector2.zero)
         {
-            if (stateMachine.PlayerController.isWalk)
+            if (stateMachine.PlayerController.isSprint)
                 stateMachine.ChangeState(stateMachine.RunState);
             else
                 stateMachine.ChangeState(stateMachine.WalkState);

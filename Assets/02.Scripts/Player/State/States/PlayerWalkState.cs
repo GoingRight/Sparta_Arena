@@ -25,7 +25,7 @@ public class PlayerWalkState : PlayerGroundState
         if (stateMachine.PlayerController.ReturnMoveInput() == Vector2.zero)
         {
             stateMachine.ChangeState(stateMachine.IdleState);
-        } else if (stateMachine.PlayerController.isWalk)
+        } else if (stateMachine.PlayerController.isSprint)
         {
             stateMachine.ChangeState(stateMachine.RunState);
         }
