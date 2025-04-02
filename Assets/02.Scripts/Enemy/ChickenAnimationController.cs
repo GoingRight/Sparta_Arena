@@ -5,14 +5,12 @@ public class ChickenAnimationController : MonoBehaviour
     private Animator animator;
     private readonly int IsMoving = Animator.StringToHash("IsMoving");
     private readonly int IsRunning = Animator.StringToHash("IsRunning");
-    private readonly int IsAttacking = Animator.StringToHash("IsAttacking");
     private readonly int AttackTrigger = Animator.StringToHash("Attack");
     private readonly int HitTrigger = Animator.StringToHash("Hit");
     private readonly int IsDead = Animator.StringToHash("IsDead");
 
     private bool isMoving;
     private bool isRunning;
-    private bool isAttacking;
     private bool isDead;
 
     private void Awake()
@@ -38,15 +36,6 @@ public class ChickenAnimationController : MonoBehaviour
         }
     }
 
-    public void SetAttacking(bool value)
-    {
-        if (isAttacking != value)
-        {
-            isAttacking = value;
-            animator.SetBool(IsAttacking, value);
-        }
-    }
-
     public void TriggerAttack()
     {
         animator.SetTrigger(AttackTrigger);
@@ -68,21 +57,12 @@ public class ChickenAnimationController : MonoBehaviour
 
     public void OnAttackAnimationComplete()
     {
-        SetAttacking(false);
         SetRunning(false);
         SetMoving(false);
     }
 
     public void OnDeathAnimationComplete()
     {
-        // 죽음 애니메이션이 완료된 후 처리할 로직
         Destroy(gameObject);
     }
-
-    public void ResetAllStates()
-    {
-        SetAttacking(false);
-        SetRunning(false);
-        SetMoving(false);
-    }
-} 
+}

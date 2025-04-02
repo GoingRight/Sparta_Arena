@@ -63,7 +63,19 @@ public class EnemyCar : EnemyBoss
         {
             bossPhase = 2;
         }
+        if(stat.CurrentHP <= 0)
+        {
+            Die();
+        }
     }
+
+    public void Die()
+    {
+        GameManager.Instance.Victory();
+        Destroy(gameObject);
+    }
+
+
     protected override void Move() { }
 
     protected override void Attack()

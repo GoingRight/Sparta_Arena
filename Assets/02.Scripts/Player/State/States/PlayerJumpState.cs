@@ -1,9 +1,12 @@
+using UnityEngine;
+
 public class PlayerJumpState : PlayerAirState
 {
     public PlayerJumpState(PlayerStateMachine stateMachine) : base(stateMachine) { }
 
     public override void Enter()
     {
+        stateMachine.PlayerController._rigidbody.AddForce(Vector3.up * stateMachine.JumpForce, ForceMode.Impulse);
         base.Enter();
         StartAnimation(stateMachine.Player.AnimationData.JumpParameterHash);
     }

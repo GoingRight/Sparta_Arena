@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2efcc283ebeb2b49bf163217153071c, type: 3}
   m_Name: Mob_chicken
   m_EditorClassIdentifier: 
-  monsterPrefab: {fileID: 3863239220734238244, guid: 54d1e3f2f2a02584e81eaec43cfc20b3,
+  monsterPrefab: {fileID: 3863239220734238244, guid: 69719a84bd6358d47a198a22c14d6061,
     type: 3}
   monsterCount: 5
   isBossWave: 0
