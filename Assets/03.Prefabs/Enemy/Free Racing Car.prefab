@@ -854,6 +854,7 @@ MonoBehaviour:
     maxHP: 200
     currentHP: 0
     speed: 20
+  bossName: "\uAF2C\uB9C8\uC790\uB3D9\uCC28 \uBD95\uBD95"
   ChargeSpeed: 5000
   SpinSpeed: 100
   flashImage: {fileID: 8183514624762889314}
