@@ -8,6 +8,7 @@ TagManager:
   - TouchDamageMonster
   - ItemPivot
   - Enemy
+  - Weapon
   layers:
   - Default
   - TransparentFX

@@ -31,12 +31,14 @@ public class PlayerController : MonoBehaviour
 
         if (characterModel == null)
             characterModel = transform.GetChild(0);
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private void FixedUpdate()
     {
         Move();
-        isGrounded = Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z), Vector3.down, 1.5f, groundMask);
+        isGrounded = Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z), Vector3.down, 1.2f, groundMask);
     }
 
     public void OnMove(InputAction.CallbackContext context)

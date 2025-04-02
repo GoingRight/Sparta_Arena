@@ -157,11 +157,52 @@ PrefabInstance:
       propertyPath: m_Name
       value: LongSword
       objectReference: {fileID: 0}
+    - target: {fileID: 4334314813405729788, guid: edccbf15fadd9704cb7a2020a492b120,
+        type: 3}
+      propertyPath: m_TagString
+      value: Weapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484208065627108173, guid: edccbf15fadd9704cb7a2020a492b120,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 0.28712687
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484208065627108173, guid: edccbf15fadd9704cb7a2020a492b120,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 1.2200396
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484208065627108173, guid: edccbf15fadd9704cb7a2020a492b120,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484208065627108173, guid: edccbf15fadd9704cb7a2020a492b120,
+        type: 3}
+      propertyPath: m_Center.x
+      value: -0.0055611767
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484208065627108173, guid: edccbf15fadd9704cb7a2020a492b120,
+        type: 3}
+      propertyPath: m_Center.y
+      value: 0.40256277
+      objectReference: {fileID: 0}
+    - target: {fileID: 4484208065627108173, guid: edccbf15fadd9704cb7a2020a492b120,
+        type: 3}
+      propertyPath: m_Center.z
+      value: -0.000000024228223
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: edccbf15fadd9704cb7a2020a492b120, type: 3}
+--- !u!1 &2752365787765548499 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4334314812708720168, guid: edccbf15fadd9704cb7a2020a492b120,
+    type: 3}
+  m_PrefabInstance: {fileID: 1879349330603912187}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2752365787765548509 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4334314812708720166, guid: edccbf15fadd9704cb7a2020a492b120,
@@ -186,6 +227,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 2504818381337907381, guid: fe76244bba085e140895f4997070edee,
+        type: 3}
+      propertyPath: characterModel
+      value: 
+      objectReference: {fileID: 1375932589946039406}
     - target: {fileID: 2504818381337907381, guid: fe76244bba085e140895f4997070edee,
         type: 3}
       propertyPath: groundMask.m_Bits
@@ -276,6 +322,11 @@ PrefabInstance:
       propertyPath: m_ActionEvents.Array.data[2].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 6626384111162085518, guid: fe76244bba085e140895f4997070edee,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 80
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -287,8 +338,37 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2752365787765548509}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2132441055768731883, guid: fe76244bba085e140895f4997070edee,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8925344637015044971}
   m_SourcePrefab: {fileID: 100100000, guid: fe76244bba085e140895f4997070edee, type: 3}
+--- !u!1 &129748094092684324 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2132441055768731883, guid: fe76244bba085e140895f4997070edee,
+    type: 3}
+  m_PrefabInstance: {fileID: 2043234431512104143}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8925344637015044971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 129748094092684324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bc9ac27209a72f4a8a79807683bd068, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sword: {fileID: 2752365787765548499}
+--- !u!4 &1375932589946039406 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1099807969140121761, guid: fe76244bba085e140895f4997070edee,
+    type: 3}
+  m_PrefabInstance: {fileID: 2043234431512104143}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1531899658903747054 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 655661307715892513, guid: fe76244bba085e140895f4997070edee,
@@ -301,7 +381,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 2043234431512104143}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 129748094092684324}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 376eb24eab15f1f409f6521de0531490, type: 3}
