@@ -9,7 +9,7 @@ public class Player : Character
 
     protected internal PlayerStateMachine stateMachine;
 
-    public Action<Collider> detectTakeDamage;
+    public Action detectTakeDamage;
 
     public Animator Animator { get; private set; }
     public PlayerController Input { get; private set; }
@@ -29,7 +29,6 @@ public class Player : Character
 
     private void Start()
     {
-        detectTakeDamage += OnCollisionEnter;
         stateMachine.ChangeState(stateMachine.IdleState);
     }
 
