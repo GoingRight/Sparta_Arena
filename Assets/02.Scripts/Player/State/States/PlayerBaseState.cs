@@ -21,7 +21,7 @@ public class PlayerBaseState : IState
 
     public virtual void Exit()
     {
-        
+
     }
 
     public virtual void HandleInput()
@@ -47,5 +47,31 @@ public class PlayerBaseState : IState
     protected void StopAnimation(int animatorHash)
     {
         stateMachine.Player.Animator.SetBool(animatorHash, false);
+    }
+
+    protected void ForceMove()
+    {
+        stateMachine.PlayerController._rigidbody.velocity = stateMachine.Player.transform.forward * stateMachine.PlayerController.speed;
+    }
+
+    protected float GetNormalizeTime(Animator anim, string tag)
+    {
+        AnimatorStateInfo currentInfo = anim.GetCurrentAnimatorStateInfo(0);
+        AnimatorStateInfo nextInfo = anim.GetNextAnimatorStateInfo(0);
+
+        if (anim.IsInTransition(0) && nextInfo.IsTag(tag))
+        {
+            return nextInfo.normalizedTime;
+        }
+
+        else if (!anim.IsInTransition(0) && currentInfo.IsTag(tag))
+        {
+            return currentInfo.normalizedTime;
+        }
+
+        else
+        {
+            return 0;
+        }
     }
 }

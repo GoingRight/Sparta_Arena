@@ -37,7 +37,7 @@
                     "type": "Value",
                     "id": "d8f69440-b4d0-450e-8357-fed164ee40c8",
                     "expectedControlType": "Delta",
-                    "processors": "",
+                    "processors": "InvertVector2(invertY=false)",
                     "interactions": "",
                     "initialStateCheck": true
                 },

@@ -13,8 +13,10 @@ public class PlayerAnimationData
     [SerializeField] private string airParameterName = "@Air";
     [SerializeField] private string jumpParameterName = "Jump";
     [SerializeField] private string fallParameterName = "Fall";
-    [SerializeField] private string attackParameterName = "@Attack";
+    [SerializeField] private string meleeAttackParameterName = "@MeleeAttack";
     [SerializeField] private string comboAttackParameterName = "ComboAttack";
+    [SerializeField] private string rangeAttackParameterName = "@RangeAttack";
+    [SerializeField] private string takeDamagedParameterName = "takeDamaged";
 
     public int GroundParameterHash { get; private set; }
     public int IdleParameterHash { get; private set; }
@@ -23,8 +25,10 @@ public class PlayerAnimationData
     public int AirParameterHash { get; private set; }
     public int JumpParameterHash { get; private set; }
     public int FallParameterHash { get; private set; }
-    public int AttackParameterHash { get; private set; }
+    public int MeleeAttackParameterHash { get; private set; }
     public int ComboAttackParameterHash { get; private set; }
+    public int RangeAttackParameterHash { get; private set; }
+    public int TakeDamagedParameterHash { get; private set; }
 
     public void Initialize()
     {
@@ -35,8 +39,10 @@ public class PlayerAnimationData
         AirParameterHash = Animator.StringToHash(airParameterName);
         JumpParameterHash = Animator.StringToHash(jumpParameterName);
         FallParameterHash = Animator.StringToHash(fallParameterName);
-        AttackParameterHash = Animator.StringToHash(attackParameterName);
+        MeleeAttackParameterHash = Animator.StringToHash(meleeAttackParameterName);
         ComboAttackParameterHash = Animator.StringToHash(comboAttackParameterName);
+        RangeAttackParameterHash = Animator.StringToHash(rangeAttackParameterName);
+        TakeDamagedParameterHash = Animator.StringToHash(takeDamagedParameterName);
 
         Animator anim = new Animator();
         //anim.SetBool(GroundParameterHash, true);
