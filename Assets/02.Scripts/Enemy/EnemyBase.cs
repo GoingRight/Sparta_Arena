@@ -1,0 +1,20 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public abstract class EnemyBase : Character
+{
+
+    protected abstract void Move();
+    protected abstract void FindPlayer();
+    protected abstract void Attack();
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Weapon"))
+        {
+            float damage = GameManager.Instance.player.stat.Attack;
+            TakeDamage(damage);
+        }
+    }
+}
