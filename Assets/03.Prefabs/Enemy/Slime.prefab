@@ -320,8 +320,8 @@ MonoBehaviour:
   stat:
     attack: 10
     defence: 0
-    maxHP: 50
-    currentHP: 50
+    maxHP: 30
+    currentHP: 30
     speed: 1
   <SlimeAnimationData>k__BackingField:
     moveParameterName: IsMove

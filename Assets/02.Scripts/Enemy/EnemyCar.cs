@@ -39,7 +39,7 @@ public class EnemyCar : EnemyBoss
         player = GameManager.Instance.player;
         myCol = GetComponentInChildren<Collider>();
         playerCol = player.GetComponent<Collider>(); // 플레이어의 콜라이더 위치에 따라 GetComponentInChildren으로 바꿔야 할 수도 있음
-        Physics.IgnoreCollision(myCol, playerCol, true);
+        //Physics.IgnoreCollision(myCol, playerCol, true);
 
         FindPlayer();
         dashCoroutine = StartCoroutine(DashCo());
@@ -150,4 +150,5 @@ public class EnemyCar : EnemyBoss
             yield return null;
         }
     }
+
 }
