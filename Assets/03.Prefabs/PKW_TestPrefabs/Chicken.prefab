@@ -577,7 +577,7 @@ MonoBehaviour:
     maxHP: 100
     currentHP: 100
     speed: 1.5
-  bossName: 
+  bossName: "\uB3D9\uBB3C\uBCF5\uC9C0 \uC778\uC99D \uB18D\uC7A5 \uB2ED"
   detectRange: 5
   attackRange: 1
   rotateSpeed: 5
@@ -590,7 +590,7 @@ MonoBehaviour:
   attackCheckInterval: 0.1
   phase2Speed: 1.5
   phase2Damage: 1.5
-  isBoss: 0
+  isBoss: 1
 --- !u!114 &2034571440439133903
 MonoBehaviour:
   m_ObjectHideFlags: 0
