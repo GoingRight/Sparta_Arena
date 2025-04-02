@@ -28,7 +28,6 @@ public class PlayerStateMachine : StateMachine
         IdleState = new PlayerIdleState(this);
         WalkState = new PlayerWalkState(this);
         RunState = new PlayerRunState(this);
-        TakeDamagedState = new PlayerTakeDamagedState(this);
 
         JumpState = new PlayerJumpState(this);
         FallState = new PlayerFallState(this);

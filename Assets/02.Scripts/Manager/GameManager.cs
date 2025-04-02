@@ -26,6 +26,12 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
     }
 
+    private void Start()
+    {
+        if (player == null)
+            player = FindFirstObjectByType<Player>();
+    }
+
     public void Victory()
     {
         //승리화면 띄우기
