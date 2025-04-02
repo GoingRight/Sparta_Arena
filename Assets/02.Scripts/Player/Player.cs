@@ -58,5 +58,6 @@ public class Player : Character
     {
         base.TakeDamage(damage);
         UIManager.Instance.mainUI.SetPlayerHPBar();
+        detectTakeDamage?.Invoke();
     }
 }
