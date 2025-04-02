@@ -203,6 +203,11 @@ PrefabInstance:
       propertyPath: camPivot
       value: 
       objectReference: {fileID: 629001384}
+    - target: {fileID: 4510884888968404090, guid: e9fa766a341655b418b7a455a7778afd,
+        type: 3}
+      propertyPath: characterModel
+      value: 
+      objectReference: {fileID: 218895155}
     m_RemovedComponents: []
     m_RemovedGameObjects:
     - {fileID: 7904250314427523831, guid: e9fa766a341655b418b7a455a7778afd, type: 3}
@@ -212,6 +217,12 @@ PrefabInstance:
 --- !u!4 &218895154 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4231604847790034453, guid: e9fa766a341655b418b7a455a7778afd,
+    type: 3}
+  m_PrefabInstance: {fileID: 218895153}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &218895155 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1375932589946039406, guid: e9fa766a341655b418b7a455a7778afd,
     type: 3}
   m_PrefabInstance: {fileID: 218895153}
   m_PrefabAsset: {fileID: 0}
@@ -427,12 +438,12 @@ PrefabInstance:
     - target: {fileID: 3166693886671050667, guid: 25e697bbd1203b54699f47b8f685d555,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.0000000042806527
+      value: -0.000000004280661
       objectReference: {fileID: 0}
     - target: {fileID: 3166693886671050667, guid: 25e697bbd1203b54699f47b8f685d555,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 4.2386816e-10
+      value: 4.238689e-10
       objectReference: {fileID: 0}
     - target: {fileID: 3166693886671050667, guid: 25e697bbd1203b54699f47b8f685d555,
         type: 3}
@@ -680,7 +691,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 846507761}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.09853762, y: -0.0000000042806527, z: 4.2386816e-10, w: 0.99513334}
+  m_LocalRotation: {x: 0.09853762, y: -0.000000004280661, z: 4.238689e-10, w: 0.99513334}
   m_LocalPosition: {x: 0, y: 1.01, z: -5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
