@@ -7,6 +7,7 @@ TagManager:
   - CinemachineTarget
   - TouchDamageMonster
   - ItemPivot
+  - Enemy
   layers:
   - Default
   - TransparentFX
