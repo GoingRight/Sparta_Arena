@@ -49,6 +49,8 @@ public class EnemyChicken : EnemyBoss
     private float nextMoveTime = 0f; // 이동 시간
     private float attackTimer = 0f; // 공격 쿨타임 초기화
     private float nextAttackTime = 0f; // 공격 시간
+    private float moveTimeLimit = 4f; // 이동 시간 제한
+    private float currentMoveTime = 0f; // 현재 이동 시간
 
     private EnemyState currentState = EnemyState.Idle; // 상태 Idle 기본값
     private bool canAttack = true; // 공격 가능 여부
@@ -247,6 +249,16 @@ public class EnemyChicken : EnemyBoss
 
     private void MoveTowardsTarget() // 목표 지점 이동
     {
+        currentMoveTime += Time.deltaTime;
+        
+        // 이동 시간 제한 체크
+        if (currentMoveTime >= moveTimeLimit)
+        {
+            currentMoveTime = 0f;
+            StartIdleState();
+            return;
+        }
+
         Vector3 directionTarget = (targetPosition - transform.position).normalized; // 방향 설정
         directionTarget.y = 0f;
 
@@ -284,6 +296,7 @@ public class EnemyChicken : EnemyBoss
 
         currentState = EnemyState.Idle;
         animController.SetMoving(false);
+        currentMoveTime = 0f; // 이동 시간 초기화
         SetNextMoveTime();
     }
 
@@ -293,6 +306,7 @@ public class EnemyChicken : EnemyBoss
 
         currentState = EnemyState.Moving;
         animController.SetMoving(true);
+        currentMoveTime = 0f; // 이동 시간 초기화
         RandomDestination();
     }
 
@@ -365,7 +379,7 @@ public class EnemyChicken : EnemyBoss
     #region Utility
     private void RandomDestination() // 목적지 설정
     {
-        int maxAttempts = 5; // 최대 시도 횟수
+        int maxAttempts = 10; // 최대 시도 횟수
         int attempts = 0;
 
         while (attempts < maxAttempts)
@@ -375,8 +389,9 @@ public class EnemyChicken : EnemyBoss
             Vector3 randomDirection = Quaternion.Euler(0f, randomAngle, 0f) * Vector3.forward;
             Vector3 potentialTarget = transform.position + randomDirection * randomDistance;
 
+            Vector3 rayStart = transform.position + Vector3.up * 0.5f;
             RaycastHit hit; // 장애물 체크
-            if (Physics.Raycast(transform.position, randomDirection, out hit, randomDistance))
+            if (Physics.Raycast(rayStart, randomDirection, out hit, randomDistance))
             {
                 attempts++; // 장애물이 있으면 다른 방향 시도
                 continue;
@@ -386,7 +401,7 @@ public class EnemyChicken : EnemyBoss
             return;
         }
 
-        targetPosition = transform.position + transform.forward * minMoveDistance; // 찾지 못한 경우 현재 위치에서 가장 가까운 안전한 위치 선택
+        targetPosition = transform.position + transform.forward * minMoveDistance; // 찾지 못한 경우 현재 위치에서 가장 가까운 위치 선택
     }
 
     private void SetNextMoveTime() // 이동 시간 초기화
