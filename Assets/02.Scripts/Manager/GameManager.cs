@@ -25,4 +25,9 @@ public class GameManager : MonoBehaviour
         else
             Destroy(gameObject);
     }
+
+    public void Victory()
+    {
+        //승리화면 띄우기
+    }
 }

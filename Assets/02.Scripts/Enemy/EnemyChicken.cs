@@ -80,6 +80,14 @@ public class EnemyChicken : EnemyBoss
         RandomDestination();
     }
 
+    private void Start()
+    {
+        if (isBoss)
+        {
+            GameManager.Instance.Boss = this;
+        }
+    }
+
     private void Update()
     {
         if (player == null || currentState == EnemyState.Dead) return;
@@ -347,13 +355,17 @@ public class EnemyChicken : EnemyBoss
         currentState = EnemyState.Dead;
         animController.SetDead(true);
         GetComponent<Collider>().enabled = false;
+        if (isBoss)
+        {
+            GameManager.Instance.Victory();
+        }
     }
     #endregion
 
     #region Utility
     private void RandomDestination() // 목적지 설정
     {
-        int maxAttempts = 10; // 최대 시도 횟수
+        int maxAttempts = 5; // 최대 시도 횟수
         int attempts = 0;
 
         while (attempts < maxAttempts)
