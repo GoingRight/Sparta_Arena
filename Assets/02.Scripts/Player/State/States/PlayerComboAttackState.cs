@@ -46,11 +46,11 @@ public class PlayerComboAttackState : PlayerMeleeState
             if (normalizedTime >= attackInfoData.ComboTransitionTime)
             {
                 TryComboAttack();
+                stateMachine.PlayerController._rigidbody.AddForce(Vector3.forward * 10f, ForceMode.Impulse);
             }
 
             if (normalizedTime >= attackInfoData.ForceTranstionTime)
             {
-                // 댐핑 처리
             }
         }
         else
