@@ -78,7 +78,7 @@ public class WaveManager : MonoBehaviour
             randomMonsterType[i] = list[randomValue];
             list.RemoveAt(randomValue);
         }
-        curWaveIndex = 5;
+        curWaveIndex = 1;
     }
 
     public void OnSceneLoded()
