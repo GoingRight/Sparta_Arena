@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AndroidMobInteractor : BaseInteractor<AndroidMobEntity>
+public class PrettyGirlInteractor : BaseInteractor<PrettyGirlEntity>
 {
     [SerializeField] private Animator animator;
     public Text stateTxt;
@@ -15,9 +15,8 @@ public class AndroidMobInteractor : BaseInteractor<AndroidMobEntity>
         stateTxt = GetComponentInChildren<Text>();
         if (State == null || animator == null) return;
 
-        State.ActiveState.Bind(OnStateChanged, this, RxType.Functional); 
+        State.ActiveState.Bind(OnStateChanged, this, RxType.Functional);
     }
-   
 
     private void OnStateChanged(MobState state)
     {
@@ -29,25 +28,20 @@ public class AndroidMobInteractor : BaseInteractor<AndroidMobEntity>
                 animator.Play("Walk"); break;
             case MobState.Run:
                 animator.Play("Run"); break;
-            case MobState.Retreat:
-                animator.Play("Retreat"); break;
-            case MobState.Buff:
-                animator.Play("Buff"); break;
-            case MobState.Debuff:
-                animator.Play("Debuff"); break;
             case MobState.Hit:
                 animator.Play("Hit"); break;
             case MobState.Dead:
                 animator.Play("Dead"); break;
+
+            // 공격 모션: 무기 기반으로 클립 다르게 매핑 가능
             case MobState.Act1:
-                animator.Play("Skill1"); break;
+                animator.Play("Attack_Sword"); break;
             case MobState.Act2:
-                animator.Play("Skill2"); break;
+                animator.Play("Attack_Spear"); break;
             case MobState.Act3:
-                animator.Play("Skill3"); break;
-            case MobState.Heal:
-                animator.Play("Heal"); break;
+                animator.Play("Attack_Rifle"); break;
         }
+
         if (stateTxt != null)
             stateTxt.text = $"STATE: {state}";
     }

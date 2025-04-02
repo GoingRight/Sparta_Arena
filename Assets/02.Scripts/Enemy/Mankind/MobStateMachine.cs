@@ -15,7 +15,8 @@ public enum MobState
     Dead,
     Retreat,
     Buff,
-    Debuff
+    Debuff,
+    Heal
 }
 
 public static class MobStatePriority
@@ -56,6 +57,7 @@ public class MobStateMachine : RxStateMachine<MobState>
         Register(MobState.Retreat, () => IsPlayerNear() && IsWeakGroup());
         Register(MobState.Buff, () => IsGroupDense() && IsSafe());
         Register(MobState.Debuff, () => IsPlayerNear() && IsGroupAggressive());
+        Register(MobState.Heal, () => IsGroupWeak() && IsSafe());
 
         RxBinder.Bind(group.AvgHealth, _ => TickAutoStates(), this);
         RxBinder.Bind(group.UnderAttack, _ => TickAutoStates(), this);
@@ -81,6 +83,7 @@ public class MobStateMachine : RxStateMachine<MobState>
         return (playerPos - selfPosition).sqrMagnitude < 4f;
     }
 
+    private bool IsGroupWeak() => group.AvgHealth.Value < 0.3f;
     private bool IsWeakGroup() => group.AvgHealth.Value < 0.5f;
     private bool IsGroupDense() => group.AllyCount.Value >= 6;
     private bool IsSafe() => !group.UnderAttack.Value;
@@ -94,7 +97,6 @@ public class MobStateMachine : RxStateMachine<MobState>
             return;
 
         float speed = new Vector3(moveDir.x, 0f, moveDir.z).magnitude;
-        Debug.Log($"[MobStateMachine] speed = {speed}, threshold = {walkThreshold}/{runThreshold}");
         if (speed > runThreshold)
             Request(MobState.Run);
         else if (speed > walkThreshold)

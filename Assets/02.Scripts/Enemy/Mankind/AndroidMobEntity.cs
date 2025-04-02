@@ -38,12 +38,12 @@ public class AndroidMobEntity : BaseEntity
 
     private void EvaluateStrategy(MobGroupStatusModel status)
     {
-        if (status.AvgHealth.Value < 0.4f)
-            Dance = DanceType.Heal;
+        if (status.AvgHealth.Value < 0.3f)
+            Dance = DanceType.HealAll;
         else if (status.UnderAttack.Value)
-            Dance = DanceType.Debuff;
+            Dance = DanceType.DebuffPlayer;
         else
-            Dance = DanceType.Buff;
+            Dance = DanceType.BuffAll;
 
         Strategy = StrategyType.Defend;
         RequestDanceState();
@@ -53,16 +53,17 @@ public class AndroidMobEntity : BaseEntity
     {
         switch (Dance)
         {
-            case DanceType.Heal:
-            case DanceType.Buff:
-                stateMachine.Request(MobState.Buff); // ✅ 이름 변경
+            case DanceType.HealAll:
+                stateMachine.Request(MobState.Heal);
                 break;
-            case DanceType.Debuff:
-                stateMachine.Request(MobState.Debuff); // ✅ 이름 변경
+            case DanceType.BuffAll:
+                stateMachine.Request(MobState.Buff);
+                break;
+            case DanceType.DebuffPlayer:
+                stateMachine.Request(MobState.Debuff);
                 break;
         }
     }
-
     private void BindStrategyToState()
     {
         // 필요시 상태 변화 바인딩 예:

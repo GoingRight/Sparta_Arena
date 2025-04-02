@@ -1459,6 +1459,16 @@ PrefabInstance:
       propertyPath: RunThreshold
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6033575840966443575, guid: 6d0ce331180c4504a90ce896cdea3166,
+        type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: 73ffbc06802a247cfb1b26f4ee67eba8, type: 3}
+    - target: {fileID: 6033575840966443575, guid: 6d0ce331180c4504a90ce896cdea3166,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6650624037124109610, guid: 6d0ce331180c4504a90ce896cdea3166,
         type: 3}
       propertyPath: m_LocalPosition.x
