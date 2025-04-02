@@ -22,7 +22,6 @@ namespace Akasha
 
         public void SetValue(T newValue, object caller)
         {
-            Debug.Log($"[RxVar] SetValue 요청: 현재 = {_value}, 새값 = {newValue}");
             if (!IsAuthorized(caller))
                 throw new InvalidOperationException($"[RxVar.SetValue] {caller?.GetType().Name}는 RxVar의 값을 변경할 권한이 없습니다.");
 
@@ -32,7 +31,6 @@ namespace Akasha
 
                 RxQueue.Enqueue(() =>
                 {
-                    Debug.Log($"[RxVar] NotifyAll 실행 for {_value}");
                     this.WithContext(() => _subscription.NotifyAll(_value));
                 }, this);
             }

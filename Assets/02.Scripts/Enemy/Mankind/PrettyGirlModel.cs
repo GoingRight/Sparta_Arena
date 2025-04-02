@@ -3,15 +3,14 @@ using UnityEngine;
 
 public class PrettyGirlModel : RxModel, IMobHealthReadable
 {
-    // ✅ 저장되는 값
+    // ✅ 게임 데이터 저장 필드
     public RxVar<float> CurrentHealth { get; private set; }
-    public RxVar<float> MaxHealth { get; private set; }
-    public RxVar<StrategyType> Strategy { get; private set; }
+    public RxVar<WeaponType> Weapon { get; private set; }
 
-    // ✅ 외부 연결 가능한 계산 필드
+    // ✅ 외부 연결 파생값
     public RxExpr<float> HealthRatioExpr { get; private set; }
 
-    // ✅ 조건 판단용 플래그
+    // ✅ 조건 플래그
     public RxFlag IsAlive { get; private set; }
 
     public float HealthRatio => HealthRatioExpr.Value;
@@ -20,13 +19,12 @@ public class PrettyGirlModel : RxModel, IMobHealthReadable
     {
         SetReactiveOwner(owner);
 
-        MaxHealth = new RxVar<float>(100f, this);
         CurrentHealth = new RxVar<float>(100f, this);
-        Strategy = new RxVar<StrategyType>(StrategyType.Idle, this);
+        Weapon = new RxVar<WeaponType>(WeaponType.Sword, this); // 기본 무기는 검
 
         HealthRatioExpr = new RxExpr<float>(
-            () => Mathf.Clamp01(CurrentHealth.Value / Mathf.Max(MaxHealth.Value, 1f)),
-            CurrentHealth, MaxHealth
+            () => Mathf.Clamp01(CurrentHealth.Value / 100f),
+            CurrentHealth
         );
 
         IsAlive = new RxFlag(() => CurrentHealth.Value > 0f, this, CurrentHealth);

@@ -7,14 +7,16 @@ public interface IMobHealthReadable
 }
 public enum DanceType
 {
-    Buff,
-    Heal,
-    Debuff
+    BuffAll,
+    HealAll,
+    DebuffPlayer
 }
 public enum StrategyType
 {
     Idle,
     Attack,
+    Hold,
+    Retreat,
     Defend
 }
 
@@ -22,4 +24,11 @@ public enum FormationRole
 {
     Fighter,
     Supporter
+}
+
+public enum WeaponType
+{
+    Sword,
+    Spear,
+    Rifle
 }

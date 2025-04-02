@@ -4,43 +4,45 @@ using UnityEngine;
 public class PrettyGirlEntity : BaseEntity
 {
     private PrettyGirlModel model;
+    public MobStateMachine stateMachine;
+
+    public WeaponType CurrentWeapon => model.Weapon.Value;
 
     protected override void SetupModels()
     {
         model = new PrettyGirlModel();
         model.Setup(this);
-
         MobManager.Instance.Register(model);
-    }
-
-    // --- 모델 래핑 프로퍼티 ---
-    private StrategyType Strategy
-    {
-        get => model.Strategy.Value;
-        set => model.Strategy.SetValue(value, this);
     }
 
     protected override void SetupParts()
     {
-        RxTimer.Every(0.2f, this, CheckProximityAndDecide);
+        stateMachine = new MobStateMachine(this, () => transform.position);
+        // 추가 상태 바인딩 필요 시 여기에
     }
 
-
-
-    private float DistanceToPlayer
-        => Vector3.Distance(transform.position, MobManager.Instance.PlayerPosition);
-
-    // --- 전략 판단 로직 ---
-
-    private void CheckProximityAndDecide()
+    public void SetWeapon(WeaponType newWeapon)
     {
-        if (DistanceToPlayer < 3f && Strategy == StrategyType.Idle)
+        if (model.Weapon.Value == newWeapon) return;
+
+        model.Weapon.SetValue(newWeapon, model);
+
+        Debug.Log($"[PrettyGirlEntity] 무기 변경됨: {newWeapon}");
+    }
+
+    public void Attack()
+    {
+        switch (CurrentWeapon)
         {
-            Strategy = Random.value > 0.5f ? StrategyType.Attack : StrategyType.Defend;
-        }
-        else if (DistanceToPlayer >= 3f && Strategy == StrategyType.Attack)
-        {
-            Strategy = StrategyType.Idle;
+            case WeaponType.Sword:
+                stateMachine.Request(MobState.Act1);
+                break;
+            case WeaponType.Spear:
+                stateMachine.Request(MobState.Act2);
+                break;
+            case WeaponType.Rifle:
+                stateMachine.Request(MobState.Act3);
+                break;
         }
     }
 }

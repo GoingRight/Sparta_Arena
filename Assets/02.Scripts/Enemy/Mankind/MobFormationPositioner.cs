@@ -43,6 +43,33 @@ public class MobFormationPositioner : MonoBehaviour
     {
         if (player == null || mobControllers.Count == 0) return;
 
+
+        StrategyType strategy = manager.GroupStatus.GroupStrategy.Value;
+
+        float strategyRadius = formationRadius;
+        float strategyFleeStrength = 0f;
+        float strategyAggression = 1f;
+
+        switch (strategy)
+        {
+            case StrategyType.Retreat:
+                strategyRadius = 9f;
+                strategyFleeStrength = 1f;
+                strategyAggression = 0f;
+                break;
+            case StrategyType.Attack:
+                strategyRadius = 4.5f;
+                strategyFleeStrength = 0f;
+                strategyAggression = 1.5f;
+                break;
+            case StrategyType.Hold:
+            default:
+                strategyRadius = 6f;
+                strategyFleeStrength = 0.5f;
+                strategyAggression = 1f;
+                break;
+        }
+
         Vector3 playerPos = player.position;
         Vector3 playerForward = player.forward;
         Vector3 playerRight = Vector3.Cross(Vector3.up, playerForward);
@@ -137,5 +164,7 @@ public class MobFormationPositioner : MonoBehaviour
                 mob.Move(moveDir);
             }
         }
+
     }
+
 }
