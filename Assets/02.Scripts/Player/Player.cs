@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Player : Character
@@ -9,6 +8,8 @@ public class Player : Character
     [field: SerializeField] public PlayerSO Data { get; private set; }
 
     protected internal PlayerStateMachine stateMachine;
+
+    public Action<Collider> detectTakeDamage;
 
     public Animator Animator { get; private set; }
     public PlayerController Input { get; private set; }
@@ -28,6 +29,7 @@ public class Player : Character
 
     private void Start()
     {
+        detectTakeDamage += OnCollisionEnter;
         stateMachine.ChangeState(stateMachine.IdleState);
     }
 
@@ -40,5 +42,15 @@ public class Player : Character
     private void FixedUpdate()
     {
         stateMachine.PhysicsUpdate();
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Enemy"))
+        {
+            Character collisionOBJ = collision.gameObject.GetComponent<Character>();
+            float damage = collisionOBJ.stat.Attack;
+            TakeDamage(damage);
+        }
     }
 }

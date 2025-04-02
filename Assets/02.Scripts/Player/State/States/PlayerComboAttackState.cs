@@ -13,6 +13,7 @@ public class PlayerComboAttackState : PlayerMeleeState
 
     public override void Enter()
     {
+        Debug.Log("Combo Attack State");
         base.Enter();
         StartAnimation(stateMachine.Player.AnimationData.MeleeAttackParameterHash);
 

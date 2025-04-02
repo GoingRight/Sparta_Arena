@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     public float speed;
     internal Vector2 curMoveInput;
     internal Rigidbody _rigidbody;
-    internal bool isWalk;
+    internal bool isSprint;
 
     [Header("Rotation")]
     [SerializeField] private float rotationSpeed = 15f; // 모델 회전 속도
@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
         Vector3 moveDirection = (camForward * curMoveInput.y + camRight * curMoveInput.x).normalized;
 
         // 속도 적용
-        speed = isWalk ? player.stat.Speed : player.RunSpeed;
+        speed = isSprint ? player.RunSpeed : player.stat.Speed;
         speed = player.stateMachine.isAttacking ? 0 : speed;
         Vector3 velocity = moveDirection * speed;
         velocity.y = _rigidbody.velocity.y;
@@ -94,7 +94,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnSprint(InputAction.CallbackContext context)
     {
-        isWalk = context.phase == InputActionPhase.Performed;
+        isSprint = context.phase == InputActionPhase.Performed;
     }
 
     public void OnJump(InputAction.CallbackContext context)

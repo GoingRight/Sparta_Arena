@@ -18,6 +18,7 @@ public class PlayerStateMachine : StateMachine
     public PlayerJumpState JumpState { get; set; }
     public PlayerFallState FallState { get; set; }
     public PlayerComboAttackState ComboAttackState { get; set; }
+    public PlayerTakeDamagedState TakeDamagedState { get; set; }
     public PlayerStateMachine(Player player)
     {
         this.Player = player;
@@ -27,6 +28,7 @@ public class PlayerStateMachine : StateMachine
         IdleState = new PlayerIdleState(this);
         WalkState = new PlayerWalkState(this);
         RunState = new PlayerRunState(this);
+        TakeDamagedState = new PlayerTakeDamagedState(this);
 
         JumpState = new PlayerJumpState(this);
         FallState = new PlayerFallState(this);

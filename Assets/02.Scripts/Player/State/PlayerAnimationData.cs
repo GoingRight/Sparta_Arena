@@ -16,6 +16,7 @@ public class PlayerAnimationData
     [SerializeField] private string meleeAttackParameterName = "@MeleeAttack";
     [SerializeField] private string comboAttackParameterName = "ComboAttack";
     [SerializeField] private string rangeAttackParameterName = "@RangeAttack";
+    [SerializeField] private string takeDamagedParameterName = "takeDamaged";
 
     public int GroundParameterHash { get; private set; }
     public int IdleParameterHash { get; private set; }
@@ -27,6 +28,7 @@ public class PlayerAnimationData
     public int MeleeAttackParameterHash { get; private set; }
     public int ComboAttackParameterHash { get; private set; }
     public int RangeAttackParameterHash { get; private set; }
+    public int TakeDamagedParameterHash { get; private set; }
 
     public void Initialize()
     {
@@ -40,6 +42,7 @@ public class PlayerAnimationData
         MeleeAttackParameterHash = Animator.StringToHash(meleeAttackParameterName);
         ComboAttackParameterHash = Animator.StringToHash(comboAttackParameterName);
         RangeAttackParameterHash = Animator.StringToHash(rangeAttackParameterName);
+        TakeDamagedParameterHash = Animator.StringToHash(takeDamagedParameterName);
 
         Animator anim = new Animator();
         //anim.SetBool(GroundParameterHash, true);
