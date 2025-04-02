@@ -28,7 +28,7 @@ public class PlayParticle : MonoBehaviour
     void Update()
     {
         Vector3 moveDir = (transform.position - prevPosition).normalized;
-        isPlaying = (transform.position - prevPosition).magnitude >= 0.05f;
+        isPlaying = (transform.position - prevPosition).magnitude >= 0.01f;
         prevPosition = transform.position;
 
         if (isPlaying)
