@@ -9,7 +9,7 @@ public class PlayParticle : MonoBehaviour
     public bool isPlaying = false;
     public float delay = 5;
 
-    [Header("Particle 珥덇린 ?명똿")]
+    [Header("Particle Setting")]
     public float duration = 0.6f;
     public Gradient colorOverLifetime;
 
@@ -71,7 +71,7 @@ public class PlayParticle : MonoBehaviour
     }
 
     /// <summary>
-    /// ?뚰떚??湲곕낯 ?명똿
+    /// Particle Base Setting
     /// </summary>
     void ParticleSetting()
     {
