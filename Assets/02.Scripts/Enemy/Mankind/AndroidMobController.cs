@@ -1,15 +1,23 @@
 using UnityEngine;
 using Akasha;
+public interface IMobController
+{
+    Vector3 MoveDirection { get; }
+    void Move(Vector3 direction);
+    Transform transform { get; }
+}
 
 [RequireComponent(typeof(Rigidbody))]
-public class AndroidMobController : BaseController<AndroidMobEntity>
+public class AndroidMobController : BaseController<AndroidMobEntity>, IMobController
 {
     [Header("Movement")]
     public float MoveSpeed = 3f;
     public float RunThreshold = 0.5f;
-    public Vector3 MoveDirection;
+    public Vector3 MoveDirection { get; private set; }
 
     private Rigidbody _rb;
+
+
 
     private void OnEnable()
     {
@@ -55,4 +63,5 @@ public class AndroidMobController : BaseController<AndroidMobEntity>
     public void PlayAct3() => Entity.stateMachine.Request(MobState.Act3);
     public void TakeHit() => Entity.stateMachine.Request(MobState.Hit);
     public void Die() => Entity.stateMachine.Request(MobState.Dead);
+    Transform IMobController.transform => transform;
 }

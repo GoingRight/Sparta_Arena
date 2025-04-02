@@ -2,18 +2,21 @@ using UnityEngine;
 using Akasha;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PrettyGirlController : BaseController<PrettyGirlEntity>
+public class PrettyGirlController : BaseController<PrettyGirlEntity>, IMobController
 {
     [Header("Movement")]
     public float MoveSpeed = 3f;
     public float RunThreshold = 0.5f;
-    public Vector3 MoveDirection;
 
     [Header("Weapon Ranges")]
     public float meleeRange = 2f;
     public float midRange = 4.5f;
 
     private Rigidbody _rb;
+
+
+
+    public Vector3 MoveDirection { get; private set; }
 
     private void OnEnable()
     {
@@ -85,4 +88,6 @@ public class PrettyGirlController : BaseController<PrettyGirlEntity>
 
     public void TakeHit() => Entity.stateMachine.Request(MobState.Hit);
     public void Die() => Entity.stateMachine.Request(MobState.Dead);
+
+    Transform IMobController.transform => this.transform;
 }

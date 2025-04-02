@@ -40,8 +40,6 @@ public class AndroidMobInteractor : BaseInteractor<AndroidMobEntity>
                 animator.Play("Walk"); break;
             case MobState.Run:
                 animator.Play("Run"); break;
-            case MobState.Retreat:
-                animator.Play("Retreat"); break;
             case MobState.Buff:
                 animator.Play("Buff"); break;
             case MobState.Debuff:
@@ -51,11 +49,11 @@ public class AndroidMobInteractor : BaseInteractor<AndroidMobEntity>
             case MobState.Dead:
                 animator.Play("Dead"); break;
             case MobState.Act1:
-                animator.Play("Skill1"); break;
+                animator.Play("Attack_Sword"); break;
             case MobState.Act2:
-                animator.Play("Skill2"); break;
+                animator.Play("Attack_Spear"); break;
             case MobState.Act3:
-                animator.Play("Skill3"); break;
+                animator.Play("Attack_Gun"); break;
             case MobState.Heal:
                 animator.Play("Heal"); break;
         }

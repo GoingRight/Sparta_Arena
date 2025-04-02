@@ -196,6 +196,74 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d0ce331180c4504a90ce896cdea3166, type: 3}
+--- !u!1001 &186523442
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2322476177195600448, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_Name
+      value: PrettyGirl (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4f17f7926ce1310419033f8e155113c6, type: 3}
 --- !u!1001 &206623566
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -403,12 +471,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spacing: 1.2
-  stopDistance: 0.2
-  moveDamp: 10
-  maxSpeed: 3
-  minSpeed: 0.5
+  stopDistance: 0.7
+  moveDamp: 5
+  maxSpeed: 2.5
+  minSpeed: 0.1
   speedCurveExponent: 2
   formationRadius: 6
+  ringSpacing: 1.5
+  idealSpacing: 1.8
+  radiusBoost: 2
+  wanderStrength: 0.5
+  flankOffsetAngle: 90
 --- !u!1 &523776634
 GameObject:
   m_ObjectHideFlags: 0
@@ -510,12 +583,80 @@ Transform:
   m_GameObject: {fileID: 523776634}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.54, y: 0.8932699, z: -0.008048922}
+  m_LocalPosition: {x: -6.17, y: 0.8932699, z: -2.68}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &721000554
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2322476177195600448, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_Name
+      value: PrettyGirl (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -2.84
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4f17f7926ce1310419033f8e155113c6, type: 3}
 --- !u!1 &779602472
 GameObject:
   m_ObjectHideFlags: 0
@@ -1109,6 +1250,74 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d0ce331180c4504a90ce896cdea3166, type: 3}
+--- !u!1001 &1388358186
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2322476177195600448, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_Name
+      value: PrettyGirl (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.66
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4f17f7926ce1310419033f8e155113c6, type: 3}
 --- !u!1001 &1451672132
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1122,10 +1331,83 @@ PrefabInstance:
       propertyPath: m_Name
       value: PrettyGirl
       objectReference: {fileID: 0}
+    - target: {fileID: 7690244929183511833, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.28
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4f17f7926ce1310419033f8e155113c6, type: 3}
+--- !u!1001 &1456840906
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2322476177195600448, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_Name
+      value: PrettyGirl (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.32
       objectReference: {fileID: 0}
     - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
         type: 3}
@@ -1665,6 +1947,74 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d0ce331180c4504a90ce896cdea3166, type: 3}
+--- !u!1001 &2043331088
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2322476177195600448, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_Name
+      value: PrettyGirl (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 4.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.26
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -7.53
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8763851424586306996, guid: 4f17f7926ce1310419033f8e155113c6,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 4f17f7926ce1310419033f8e155113c6, type: 3}
 --- !u!1001 &1047499727442765181
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1840,6 +2190,11 @@ SceneRoots:
   - {fileID: 1121569749}
   - {fileID: 523776638}
   - {fileID: 1451672132}
+  - {fileID: 1456840906}
+  - {fileID: 1388358186}
+  - {fileID: 186523442}
+  - {fileID: 721000554}
+  - {fileID: 2043331088}
   - {fileID: 779602474}
   - {fileID: 352390397}
   - {fileID: 1173361265}
