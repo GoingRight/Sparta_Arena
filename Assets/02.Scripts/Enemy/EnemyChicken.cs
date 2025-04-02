@@ -57,11 +57,27 @@ public class EnemyChicken : EnemyBoss
     #endregion
 
     #region Unity Lifecycle
-    private void Start()
+    private void Awake()
     {
-        InitializeComponents();
-        SetInitialState();
-        IsBossCheck();
+        animController = GetComponent<ChickenAnimationController>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+
+        if (isBoss) // 보스 확인
+        {
+            bossPhase = 1;
+            detectRange *= 2f;
+            attackRange += 1f;
+            transform.localScale *= 4f;
+            stat.Attack *= 5f;
+            stat.Speed += 1.5f;
+            baseSpeed = stat.Speed;
+            stat.MaxHP *= 10f;
+            stat.CurrentHP = stat.MaxHP;
+        }
+        else baseSpeed = stat.Speed;
+        
+        SetNextMoveTime();
+        RandomDestination();
     }
 
     private void Update()
@@ -75,33 +91,54 @@ public class EnemyChicken : EnemyBoss
     }
     #endregion
 
-    #region Initialization
-    private void InitializeComponents() // 컴포넌트 초기화
+    #region Interface Implementation
+    protected override void FindPlayer() // 플레이어 감지 로직
     {
-        animController = GetComponent<ChickenAnimationController>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        baseSpeed = stat.Speed;
+        if (player == null) return;
+
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        bool wasDetected = isDetected;
+        isDetected = distanceToPlayer <= detectRange;
+
+        if (currentState == EnemyState.Attacking) return; // 공격 중이면 종료
+
+        if (currentState != EnemyState.Attacking) // 공격 상태 아닐 시 플레이어 감지 상태 변경
+        {
+            if (isDetected && !wasDetected) // 감지 됐을 시 추적
+            {
+                EnterChaseState();
+            }
+            else if (!isDetected && wasDetected) // 배회
+            {
+                ResetRoaming();
+            }
+        }
     }
 
-    private void SetInitialState() // 상태 초기화
+    protected override void Move() // 이동 로직
     {
-        SetNextMoveTime();
-        RandomDestination();
-    }
-    private void IsBossCheck() // 보스일 시 스펙 증가
-    {
-        if (isBoss)
+        if (currentState == EnemyState.Attacking) return;
+
+        if (isDetected)
         {
-            bossPhase = 1;
-            
-            detectRange *= 2.5f;
-            attackRange += 1f;
-            transform.localScale *= 4f;
-            stat.Attack *= 5f;
-            stat.Speed *= 3f;
-            baseSpeed = stat.Speed;
-            stat.MaxHP *= 10f;
-            stat.CurrentHP = stat.MaxHP;
+            ChasePlayer();
+        }
+        else
+        {
+            HandleRoaming();
+        }
+    }
+
+    protected override void TakeDamage(float damage) // 데미지 받았을 시
+    {
+        if (currentState == EnemyState.Dead) return;
+
+        base.TakeDamage(damage);
+        animController.TriggerHit();
+
+        if (stat.CurrentHP <= 0)
+        {
+            Die();
         }
     }
     #endregion
@@ -116,7 +153,19 @@ public class EnemyChicken : EnemyBoss
             {
                 canAttack = true;
                 attackTimer = 0f;
-                CheckUpdateState();
+                float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+                if (distanceToPlayer <= attackRange && canAttack)
+                {
+                    Attack();
+                }
+                else if (distanceToPlayer <= detectRange)
+                {
+                    EnterChaseState();
+                }
+                else
+                {
+                    ResetRoaming();
+                }
             }
         }
 
@@ -144,27 +193,8 @@ public class EnemyChicken : EnemyBoss
         {
             currentState = EnemyState.Idle;
             animController.OnAttackAnimationComplete();
-            CheckUpdateState();
+            UpdateTimers();
         }
-    }
-
-    private void CheckUpdateState() // 거리 기반 상태 결정
-    {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
-        if (distanceToPlayer <= attackRange && canAttack) // 공격 범위 체크
-        {
-            Attack();
-            return;
-        }
-
-        if (distanceToPlayer <= detectRange) // 추적 범위 체크
-        {
-            EnterChaseState();
-            return;
-        }
-
-        ResetRoaming();
     }
     #endregion
 
@@ -280,6 +310,7 @@ public class EnemyChicken : EnemyBoss
 
         Vector3 direction = (player.position - transform.position).normalized;
         direction.y = 0f;
+        stat.Speed = 0f;
         transform.rotation = Quaternion.Slerp(
             transform.rotation,
             Quaternion.LookRotation(direction),
@@ -292,7 +323,6 @@ public class EnemyChicken : EnemyBoss
 
         animController.SetMoving(false);
         animController.SetRunning(false);
-        animController.SetAttacking(true);
         animController.TriggerAttack();
     }
 
@@ -312,24 +342,10 @@ public class EnemyChicken : EnemyBoss
         baseSpeed = stat.Speed;
     }
 
-    protected override void TakeDamage(float damage) // 데미지 받았을 시
-    {
-        if (currentState == EnemyState.Dead) return;
-
-        base.TakeDamage(damage);
-        animController.TriggerHit();
-
-        if (stat.CurrentHP <= 0)
-        {
-            Die();
-        }
-    }
-
     private void Die() // 죽었을 시
     {
         currentState = EnemyState.Dead;
         animController.SetDead(true);
-        // 콜라이더 비활성화
         GetComponent<Collider>().enabled = false;
     }
     #endregion
@@ -355,8 +371,7 @@ public class EnemyChicken : EnemyBoss
     public void OnAttackAnimationComplete() // 공격 애니메이션 종료
     {
         currentState = EnemyState.Idle;
-        animController.OnAttackAnimationComplete();
-        CheckUpdateState();
+        stat.Speed = baseSpeed;
     }
 
     public void OnAttackHitPoint() // 데미지 이벤트
@@ -371,45 +386,6 @@ public class EnemyChicken : EnemyBoss
             {
                 // playerComponent.TakeDamage(stat.Attack);
             }
-        }
-    }
-    #endregion
-
-    #region Interface Implementation
-    protected override void FindPlayer() // 플레이어 감지 로직
-    {
-        if (player == null) return;
-
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        bool wasDetected = isDetected;
-        isDetected = distanceToPlayer <= detectRange;
-
-        if (currentState == EnemyState.Attacking) return; // 공격 중이면 종료
-
-        if (currentState != EnemyState.Attacking) // 공격 상태 아닐 시 플레이어 감지 상태 변경
-        {
-            if (isDetected && !wasDetected) // 감지 됐을 시 추적
-            {
-                EnterChaseState();
-            }
-            else if (!isDetected && wasDetected) // 배회
-            {
-                ResetRoaming();
-            }
-        }
-    }
-
-    protected override void Move() // 이동 로직
-    {
-        if (currentState == EnemyState.Attacking) return;
-
-        if (isDetected)
-        {
-            ChasePlayer();
-        }
-        else
-        {
-            HandleRoaming();
         }
     }
     #endregion
