@@ -13,9 +13,6 @@ public class PrettyGirlController : BaseController<PrettyGirlEntity>, IMobContro
     public float midRange = 4.5f;
 
     private Rigidbody _rb;
-
-
-
     public Vector3 MoveDirection { get; private set; }
 
     private void OnEnable()
@@ -30,32 +27,26 @@ public class PrettyGirlController : BaseController<PrettyGirlEntity>, IMobContro
     {
         if (Entity?.stateMachine == null) return;
 
-        // 상태 업데이트
         Entity.stateMachine.Update(MoveDirection, 0.1f, RunThreshold);
-
-        // 무기 자동 교체 판단
         UpdateWeaponByDistance();
     }
 
-    public void Move(Vector3 direction)
+    public void Move(Vector3 moveDir, Vector3 lookDir)
     {
         if (Entity?.stateMachine == null) return;
         if (Entity.stateMachine.Is(MobState.Dead) || Entity.stateMachine.Is(MobState.Hit))
             return;
 
-        float distance = direction.magnitude;
-
-        float speedFactor = Mathf.Clamp01(distance / 0.5f);
-        Vector3 move = direction.normalized * MoveSpeed * speedFactor;
-
+        float speedFactor = Mathf.Clamp01(moveDir.magnitude / 0.5f);
+        Vector3 move = moveDir.normalized * MoveSpeed * speedFactor;
         move.y = _rb.velocity.y;
         _rb.velocity = move;
 
-        MoveDirection = direction;
+        MoveDirection = moveDir;
 
-        if (distance > 0.2f)
+        if (lookDir.sqrMagnitude > 0.01f)
         {
-            Quaternion lookRot = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+            Quaternion lookRot = Quaternion.LookRotation(new Vector3(lookDir.x, 0, lookDir.z));
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime * 10f);
         }
     }
@@ -66,7 +57,6 @@ public class PrettyGirlController : BaseController<PrettyGirlEntity>, IMobContro
 
         float distToPlayer = Vector3.Distance(transform.position, MobManager.Instance.PlayerPosition);
 
-        // 거리 + 전략 기준으로 무기 선택
         if (distToPlayer < meleeRange)
             Entity.SetWeapon(WeaponType.Sword);
         else if (distToPlayer < midRange)
@@ -75,7 +65,6 @@ public class PrettyGirlController : BaseController<PrettyGirlEntity>, IMobContro
             Entity.SetWeapon(WeaponType.Rifle);
     }
 
-    // 외부 호출용: 무기 타입에 따른 공격
     public void Attack()
     {
         switch (Entity.CurrentWeapon)
@@ -89,5 +78,5 @@ public class PrettyGirlController : BaseController<PrettyGirlEntity>, IMobContro
     public void TakeHit() => Entity.stateMachine.Request(MobState.Hit);
     public void Die() => Entity.stateMachine.Request(MobState.Dead);
 
-    Transform IMobController.transform => this.transform;
+    Transform IMobController.transform => transform;
 }

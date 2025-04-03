@@ -16,7 +16,7 @@ public class MobFormationPositioner : MonoBehaviour
     public float idealSpacing = 1.8f;
     public float radiusBoost = 2f;
     public float wanderStrength = 0.5f;
-    public float flankOffsetAngle = 45f; // ⬅️ 새 변수: 우회 각도
+    public float flankOffsetAngle = 45f;
 
     private MobManager manager;
     private List<IMobController> mobControllers = new();
@@ -51,27 +51,13 @@ public class MobFormationPositioner : MonoBehaviour
         StrategyType strategy = manager.GroupStatus.GroupStrategy.Value;
 
         float strategyRadius = formationRadius;
-        float strategyFleeStrength = 0f;
-        float strategyAggression = 1f;
 
         switch (strategy)
         {
-            case StrategyType.Retreat:
-                strategyRadius = 9f;
-                strategyFleeStrength = 1f;
-                strategyAggression = 0f;
-                break;
-            case StrategyType.Attack:
-                strategyRadius = 4.5f;
-                strategyFleeStrength = 0f;
-                strategyAggression = 1.5f;
-                break;
+            case StrategyType.Retreat: strategyRadius = 9f; break;
+            case StrategyType.Attack: strategyRadius = 4.5f; break;
             case StrategyType.Hold:
-            default:
-                strategyRadius = 6f;
-                strategyFleeStrength = 0.5f;
-                strategyAggression = 1f;
-                break;
+            default: strategyRadius = 6f; break;
         }
 
         Vector3 playerPos = player.position;
@@ -98,8 +84,6 @@ public class MobFormationPositioner : MonoBehaviour
             Vector3 formationOffset = (baseOffset + flankOffset).normalized * radius;
             Vector3 targetPos = playerPos + formationOffset;
 
-            bool isFleeing = Vector3.Distance(mob.transform.position, playerPos) < radius - 1f;
-
             Vector3 separation = Vector3.zero;
             Vector3 alignment = Vector3.zero;
             Vector3 cohesion = Vector3.zero;
@@ -114,14 +98,7 @@ public class MobFormationPositioner : MonoBehaviour
 
                 if (dist < 3f)
                 {
-                    if (isFleeing && dist < 2f)
-                        separation += diff.normalized * (2f - dist);
-
                     separation += diff.normalized / Mathf.Max(dist, 0.1f);
-
-                    if (Vector3.Distance(other.transform.position, playerPos) < radius - 1f)
-                        separation += diff.normalized * (1.5f - dist);
-
                     alignment += other.MoveDirection;
                     cohesion += other.transform.position;
                     neighborCount++;
@@ -142,27 +119,20 @@ public class MobFormationPositioner : MonoBehaviour
             Vector3 toTarget = (playerPos + formationOffset.normalized * dynamicRadius) - mob.transform.position;
             float distance = toTarget.magnitude;
 
+            float slowDownFactor = Mathf.Clamp01(distance / 2f); // ✨ 가까워질수록 느려지기
             float t = Mathf.Pow(Mathf.InverseLerp(0f, 10f, distance), speedCurveExponent);
-            float speed = Mathf.Lerp(minSpeed, maxSpeed, t);
+            float speed = Mathf.Lerp(minSpeed, maxSpeed, t) * slowDownFactor;
 
-            Vector3 fleeFromPlayer = Vector3.zero;
-            float fleeDistance = dynamicRadius + 2f;
+            Vector3 moveDir = (toTarget.normalized * 2f + separation * 1f + alignment * 0.5f + cohesion * 0.5f).normalized * speed;
+
             float distToPlayer = Vector3.Distance(mob.transform.position, playerPos);
-            if (distToPlayer < fleeDistance)
+            if (distToPlayer < dynamicRadius - 1f)
             {
                 Vector3 fleeDir = (mob.transform.position - playerPos).normalized;
                 Vector3 lateralDir = Vector3.Cross(Vector3.up, playerForward);
                 float lateralInfluence = Vector3.Dot(fleeDir, lateralDir);
                 Vector3 adjustedFleeDir = lateralDir * Mathf.Sign(lateralInfluence);
-                fleeFromPlayer = Vector3.Lerp(fleeDir, adjustedFleeDir, 0.8f) * Mathf.Clamp01((fleeDistance - distToPlayer) / fleeDistance);
-            }
-
-            Vector3 escapeVector = (-alignment).normalized * wanderStrength;
-
-            Vector3 moveDir = (toTarget.normalized * 2f + separation * 1f + alignment * 0.5f + cohesion * 0.5f + escapeVector).normalized * speed;
-
-            if (distToPlayer < dynamicRadius - 1f)
-            {
+                Vector3 fleeFromPlayer = Vector3.Lerp(fleeDir, adjustedFleeDir, 0.8f) * Mathf.Clamp01((dynamicRadius + 2f - distToPlayer) / (dynamicRadius + 2f));
                 moveDir = Vector3.Lerp(moveDir, fleeFromPlayer.normalized * speed, 1f);
             }
 
@@ -175,7 +145,14 @@ public class MobFormationPositioner : MonoBehaviour
                 moveDir = Vector3.Lerp(mob.MoveDirection, moveDir, Time.deltaTime * moveDamp);
             }
 
-            mob.Move(moveDir);
+            Vector3 lookDir = strategy switch
+            {
+                StrategyType.Attack => (playerPos - mob.transform.position).normalized,
+                StrategyType.Retreat => (mob.transform.position - playerPos).normalized,
+                _ => toTarget.normalized
+            };
+
+            mob.Move(moveDir, lookDir);
         }
     }
 }

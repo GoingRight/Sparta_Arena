@@ -3,9 +3,10 @@ using Akasha;
 public interface IMobController
 {
     Vector3 MoveDirection { get; }
-    void Move(Vector3 direction);
+    void Move(Vector3 moveDir, Vector3 lookDir);
     Transform transform { get; }
 }
+
 
 [RequireComponent(typeof(Rigidbody))]
 public class AndroidMobController : BaseController<AndroidMobEntity>, IMobController
@@ -13,11 +14,9 @@ public class AndroidMobController : BaseController<AndroidMobEntity>, IMobContro
     [Header("Movement")]
     public float MoveSpeed = 3f;
     public float RunThreshold = 0.5f;
+
     public Vector3 MoveDirection { get; private set; }
-
     private Rigidbody _rb;
-
-
 
     private void OnEnable()
     {
@@ -25,8 +24,6 @@ public class AndroidMobController : BaseController<AndroidMobEntity>, IMobContro
         _rb.useGravity = true;
         _rb.interpolation = RigidbodyInterpolation.Interpolate;
         _rb.constraints = RigidbodyConstraints.FreezeRotation;
-
-        var interactor = GetComponent<AndroidMobInteractor>();
     }
 
     private void Update()
@@ -35,25 +32,22 @@ public class AndroidMobController : BaseController<AndroidMobEntity>, IMobContro
         Entity.stateMachine.Update(MoveDirection, 0.1f, RunThreshold);
     }
 
-    public void Move(Vector3 direction)
+    public void Move(Vector3 moveDir, Vector3 lookDir)
     {
         if (Entity?.stateMachine == null) return;
         if (Entity.stateMachine.Is(MobState.Dead) || Entity.stateMachine.Is(MobState.Hit))
             return;
 
-        float distance = direction.magnitude;
-
-        float speedFactor = Mathf.Clamp01(distance / 0.5f);
-        Vector3 move = direction.normalized * MoveSpeed * speedFactor;
-
+        float speedFactor = Mathf.Clamp01(moveDir.magnitude / 0.5f);
+        Vector3 move = moveDir.normalized * MoveSpeed * speedFactor;
         move.y = _rb.velocity.y;
         _rb.velocity = move;
 
-        MoveDirection = direction;
+        MoveDirection = moveDir;
 
-        if (distance > 0.2f)
+        if (lookDir.sqrMagnitude > 0.01f)
         {
-            Quaternion lookRot = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+            Quaternion lookRot = Quaternion.LookRotation(new Vector3(lookDir.x, 0, lookDir.z));
             transform.rotation = Quaternion.Slerp(transform.rotation, lookRot, Time.deltaTime * 10f);
         }
     }
@@ -63,5 +57,6 @@ public class AndroidMobController : BaseController<AndroidMobEntity>, IMobContro
     public void PlayAct3() => Entity.stateMachine.Request(MobState.Act3);
     public void TakeHit() => Entity.stateMachine.Request(MobState.Hit);
     public void Die() => Entity.stateMachine.Request(MobState.Dead);
+
     Transform IMobController.transform => transform;
 }
