@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 8801354722197659750}
   - component: {fileID: 3470353878812274587}
   - component: {fileID: 1220994769382233454}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 5646633121446042639}
   - component: {fileID: 7685214523469244703}
   - component: {fileID: 3894944798436405762}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FrontLeftWheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 4891807186685482709}
   - component: {fileID: 513216044764504236}
   - component: {fileID: 6018163376246983407}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RightLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -296,7 +296,7 @@ GameObject:
   - component: {fileID: 5451748082747907451}
   - component: {fileID: 4294804326874625936}
   - component: {fileID: 4896537104630072141}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Spoiler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -380,7 +380,7 @@ GameObject:
   - component: {fileID: 4673226224855942209}
   - component: {fileID: 4448476911342813112}
   - component: {fileID: 1819996361949992041}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -479,7 +479,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4168373537521414766}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Meshes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -516,7 +516,7 @@ GameObject:
   - component: {fileID: 5440657013854840511}
   - component: {fileID: 1890635589411546385}
   - component: {fileID: 8183514624762889314}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FlashImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -591,7 +591,7 @@ GameObject:
   - component: {fileID: 833658059498721860}
   - component: {fileID: 1936014330059185761}
   - component: {fileID: 1248955184579808323}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FrontRightWheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -674,7 +674,7 @@ GameObject:
   - component: {fileID: 7287166872890691251}
   - component: {fileID: 4722602729027411970}
   - component: {fileID: 8253057473738594751}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RearRightWheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -758,7 +758,7 @@ GameObject:
   - component: {fileID: 57693320503104333}
   - component: {fileID: 4979315577995641468}
   - component: {fileID: 5905008347583427553}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Free Racing Car
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -807,14 +807,14 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 80
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!114 &4979315577995641468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -829,7 +829,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stat:
     attack: 15
-    defence: 30
+    defence: 1
     maxHP: 200
     currentHP: 0
     speed: 20
@@ -870,7 +870,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2468339986947970445}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Wheels
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -904,7 +904,7 @@ GameObject:
   - component: {fileID: 3608608486841674073}
   - component: {fileID: 5305006910487393746}
   - component: {fileID: 2216079390801877078}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RearLeftWheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -987,7 +987,7 @@ GameObject:
   - component: {fileID: 4726091105182660862}
   - component: {fileID: 8963165839646663912}
   - component: {fileID: 7889406194443473979}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: LeftLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1182,6 +1182,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: FeetParticle (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3335737313334098181, guid: a399f4e5d66e4d748b93ac31b1be28f0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5202601524736120965, guid: a399f4e5d66e4d748b93ac31b1be28f0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     - target: {fileID: 6156982635215058572, guid: a399f4e5d66e4d748b93ac31b1be28f0,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -1345,6 +1355,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: FeetParticle (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3335737313334098181, guid: a399f4e5d66e4d748b93ac31b1be28f0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5202601524736120965, guid: a399f4e5d66e4d748b93ac31b1be28f0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6156982635215058572, guid: a399f4e5d66e4d748b93ac31b1be28f0,
         type: 3}

@@ -35,5 +35,8 @@ public class GameManager : MonoBehaviour
     public void Victory()
     {
         //승리화면 띄우기
+        Cursor.lockState = CursorLockMode.None;
+        Time.timeScale = 0;
+        UIManager.Instance.mainUI.victoryUI.gameObject.SetActive(true);
     }
 }
