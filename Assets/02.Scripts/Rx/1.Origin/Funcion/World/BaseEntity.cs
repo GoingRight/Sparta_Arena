@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Akasha;
 using UnityEngine;
 
-public abstract class BaseEntity : RxContextBehaviour, IInteractLogicalSubscriber, IFiniteLocalEventSubscriber,IRxStateMachine
+public abstract class BaseEntity : RxContextBehaviour, IRxStateOwner, IFiniteFieldSubscriber, IFiniteLocalEventSubscriber
 {
     protected override void OnInit()
     {

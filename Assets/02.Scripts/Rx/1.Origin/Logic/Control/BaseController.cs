@@ -7,7 +7,7 @@ namespace Akasha
     /// 명령을 받아 동작하고 Entity에 명령을 전달합니다.
     /// </summary>
     public abstract class BaseController : RxContextBehaviour { }
-    public abstract class BaseController<TEntity> : BaseController, IFiniteLocalEventSubscriber, IGlobalEventSubscriber, IRxStateMachine
+    public abstract class BaseController<TEntity> : BaseController, IFiniteFieldSubscriber, IFiniteLocalEventSubscriber, IGlobalEventSubscriber
         where TEntity : BaseEntity
     {
         [SerializeField] private TEntity? entity;

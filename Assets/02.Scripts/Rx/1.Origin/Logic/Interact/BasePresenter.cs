@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Akasha
 {
-    public abstract class BasePresenter : RxContextBehaviour, IPresenter, IInteractLogicalSubscriber, IUnfiniteTriggerSubscriber, IUnfiniteLocalEventSubscriber, IGlobalEventSubscriber
+    public abstract class BasePresenter : RxContextBehaviour, IPresenter, ILocalEventOwner, IUnfiniteFieldSubscriber, IUnfiniteTriggerSubscriber, IUnfiniteLocalEventSubscriber, IGlobalEventSubscriber
     {
         protected override void OnInit()
         {

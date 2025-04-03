@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Akasha;
 using UnityEngine;
 
-public abstract class BaseWidget : RxContextBehaviour, IRxUnsafe, IUnfiniteTriggerSubscriber, IUnfiniteLocalEventSubscriber, IGlobalEventSubscriber
+public abstract class BaseWidget : RxContextBehaviour, IRxUnsafe
 {
 
 }

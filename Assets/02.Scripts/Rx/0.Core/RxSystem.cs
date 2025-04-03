@@ -15,6 +15,7 @@ namespace Akasha
 
     public interface IRxField { }
     public interface IRxComputed : IRxField { }
+    public interface IRxFlag : IRxField, IRxObservable<bool>, IRxDynamicSubscribable { }
     public interface IRxEvent
     {
         void Subscribe(Action subscriber, object context, RxType relationType);
@@ -40,7 +41,7 @@ namespace Akasha
     public interface IRxObservable<T> : IRxReadable<T>, IRxSubscribable<T>, IRxObservable { }
 
     // ----- Ownership Marker Interfaces -----
-
+    public interface IRxStateOwner { } // Entity, Manager가 구현
     public interface IRxFieldOwner { }
     public interface IRxExprOwner : IRxFieldOwner { }
     public interface ILocalEventOwner { }
@@ -63,15 +64,11 @@ namespace Akasha
 
     public interface IRxModel : IRxExprOwner, IFiniteFieldSubscriber { }
     public interface IRxStateMachine : IRxExprOwner, IFiniteFieldSubscriber, IFiniteTriggerSubscriber, IFiniteLocalEventSubscriber, ILocalEventOwner { }
-    public interface IScreen : IRxFieldOwner { }
     public interface IRxUnsafe { }
 
     public interface IInteractor { }
     public interface IManager : IRxExprOwner, IUnfiniteFieldSubscriber, IUnfiniteTriggerSubscriber, IUnfiniteLocalEventSubscriber, IGlobalEventOwner, IGlobalEventSubscriber { }
     public interface IPresenter : IUnfiniteFieldSubscriber, IUnfiniteLocalEventSubscriber, IGlobalEventSubscriber { }
-
-    public interface IWidget : IRxFieldOwner, IUnfiniteTriggerSubscriber, IUnfiniteLocalEventSubscriber, IGlobalEventSubscriber { }
-    public interface IGoldbug : IRxFieldOwner, IUnfiniteTriggerSubscriber, IUnfiniteLocalEventSubscriber, IGlobalEventSubscriber { }
 
     // ----- Execution Queue -----
 
@@ -106,12 +103,7 @@ namespace Akasha
         {
             while (_queue.Count > 0)
             {
-                var action = _queue.Dequeue();
-                try { action(); }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[RxQueue] 작업 실행 중 오류: {e.Message}\n{e.StackTrace}");
-                }
+                 _queue.Dequeue();
             }
         }
 
@@ -225,6 +217,102 @@ namespace Akasha
     }
 
     // ----- Subscription Core -----
+    public static class RxValidator
+    {
+        public static object? FindReactiveRoot(object obj)
+        {
+            if (obj is RxContextBehaviour context)
+                return context.ReactiveRoot;
+
+            return LegacyFindByTransform(obj);
+        }
+
+        private static object? LegacyFindByTransform(object obj)
+        {
+            var current = obj as Component;
+            while (current != null)
+            {
+                if (current.GetComponent<BaseController>() != null)
+                    return current.GetComponent<BaseController>();
+                if (current.GetComponent<BasePresenter>() != null)
+                    return current.GetComponent<BasePresenter>();
+                current = current.transform.parent?.GetComponent<MonoBehaviour>();
+            }
+            return null;
+        }
+
+        public static void ValidateFieldSubscriber(object context, object? fieldOwner)
+        {
+            string contextName = context?.GetType().Name ?? "(null)";
+            string ownerName = fieldOwner?.GetType().Name ?? "(null)";
+
+            bool hasAccess =
+                context is IFiniteFieldSubscriber ||
+                context is IUnfiniteFieldSubscriber ||
+                context is IRxUnsafe ||
+                context is IRxComputed;
+
+            if (!hasAccess)
+                throw new InvalidOperationException($"[RxValidator] {contextName}는 Rx 객체를 구독할 권한이 없습니다.");
+
+            if (context is IFiniteFieldSubscriber &&
+                context is not IUnfiniteFieldSubscriber &&
+                context is not IRxUnsafe)
+            {
+                var contextRoot = FindReactiveRoot(context);
+                var ownerRoot = FindReactiveRoot(fieldOwner);
+
+                // Manager 소유 RxField는 항상 허용
+                if (ownerRoot is IManager)
+                    return;
+
+                if (contextRoot != null && ownerRoot != null && contextRoot != ownerRoot)
+                    throw new InvalidOperationException(
+                        $"[RxValidator] {contextName}는 {ownerName}의 Rx 객체를 UnLocal 구독할 수 없습니다.\n" +
+                        $"↳ 기준 불일치: {contextRoot?.GetType().Name} vs {ownerRoot?.GetType().Name}");
+            }
+        }
+
+        public static void ValidateEventSubscriber(object context, object? eventOwner)
+        {
+            string contextName = context?.GetType().Name ?? "(null)";
+            string ownerName = eventOwner?.GetType().Name ?? "(null)";
+
+            if (context is IRxComputed)
+                throw new InvalidOperationException($"[RxValidator] {contextName}는 이벤트를 구독할 수 없습니다.");
+
+            bool hasAccess =
+                context is IFiniteTriggerSubscriber ||
+                context is IUnfiniteTriggerSubscriber ||
+                context is IFiniteLocalEventSubscriber ||
+                context is IUnfiniteLocalEventSubscriber ||
+                context is IGlobalEventSubscriber ||
+                context is IRxUnsafe;
+
+            if (!hasAccess)
+                throw new InvalidOperationException($"[RxValidator] {contextName}는 이벤트를 구독할 권한이 없습니다.");
+
+            bool isFinite =
+                context is IFiniteTriggerSubscriber ||
+                context is IFiniteLocalEventSubscriber;
+
+            bool isUnprotected =
+                context is not IUnfiniteTriggerSubscriber &&
+                context is not IUnfiniteLocalEventSubscriber &&
+                context is not IRxUnsafe;
+
+            if (isFinite && isUnprotected)
+            {
+                var contextRoot = FindReactiveRoot(context);
+                var ownerRoot = FindReactiveRoot(eventOwner);
+
+                if (contextRoot != null && ownerRoot != null && contextRoot != ownerRoot)
+                    throw new InvalidOperationException(
+                        $"[RxValidator] {contextName}는 {ownerName}의 이벤트를 UnLocal 구독할 수 없습니다.\n" +
+                        $"↳ 기준 불일치: {contextRoot?.GetType().Name} vs {ownerRoot?.GetType().Name}");
+            }
+        }
+    }
 
     public class RxSubscription<T>
     {
@@ -374,6 +462,25 @@ namespace Akasha
                     disposable.Dispose();
 
                 _bindings.Remove(context);
+            }
+        }
+    }
+    public class DelegateDisposable : IDisposable
+    {
+        private readonly Action _dispose;
+        private bool _disposed;
+
+        public DelegateDisposable(Action dispose)
+        {
+            _dispose = dispose;
+        }
+
+        public void Dispose()
+        {
+            if (!_disposed)
+            {
+                _disposed = true;
+                _dispose?.Invoke();
             }
         }
     }

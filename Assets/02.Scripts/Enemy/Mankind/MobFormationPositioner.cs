@@ -30,7 +30,7 @@ public class MobFormationPositioner : MonoBehaviour
 
         foreach (var mobModel in manager.AllMobs.Value)
         {
-            if (mobModel.ReactiveOwner is AndroidMobEntity entity)
+            if (mobModel.Owner is AndroidMobEntity entity)
             {
                 var controller = entity.GetComponent<AndroidMobController>();
                 if (controller != null)

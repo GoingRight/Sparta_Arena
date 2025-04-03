@@ -1,8 +1,9 @@
-
 using System;
 
 namespace Akasha
 {
+    // ----- 공통 이벤트 베이스 ----- 
+
     public abstract class RxEventBase : IRxEvent, IRxSubscribable<Unit>
     {
         protected readonly RxSubscription _subscription = new();
@@ -44,7 +45,8 @@ namespace Akasha
         }
     }
 
-    public class RxTrigger : RxEventBase
+    // ----- RxTrigger (구독자만 구분) -----
+    public class RxTrigger : RxEventBase, IUnfiniteTriggerSubscriber, IFiniteTriggerSubscriber
     {
         public override void Subscribe(Action subscriber, object context, RxType relationType)
         {
@@ -56,7 +58,8 @@ namespace Akasha
         }
     }
 
-    public class RxLocalEvent : RxEventBase
+    // ----- RxLocalEvent (소유자, 구독자 인터페이스 추가) -----
+    public class RxLocalEvent : RxEventBase, ILocalEventOwner, IFiniteLocalEventSubscriber, IUnfiniteLocalEventSubscriber
     {
         public override void Subscribe(Action subscriber, object context, RxType relationType)
         {
@@ -68,7 +71,8 @@ namespace Akasha
         }
     }
 
-    public class RxGlobalEvent : RxEventBase
+    // ----- RxGlobalEvent (소유자, 구독자 인터페이스 추가) -----
+    public class RxGlobalEvent : RxEventBase, IGlobalEventOwner, IGlobalEventSubscriber
     {
         public override void Subscribe(Action subscriber, object context, RxType relationType)
         {

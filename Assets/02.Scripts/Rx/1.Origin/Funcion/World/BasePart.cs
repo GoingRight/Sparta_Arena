@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Akasha
 {
-    public abstract class BasePart : RxContextBehaviour, IFunctionalSubscriber
+    public abstract class BasePart : RxContextBehaviour, IFiniteFieldSubscriber
     {
         public BaseEntity? Entity { get; private set; }
 

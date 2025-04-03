@@ -7,7 +7,7 @@ namespace Akasha
 
     }
 
-    public abstract class BaseInteractor<TEntity> : BaseInteractor, IInteractor, IInteractLogicalSubscriber, IFiniteTriggerSubscriber, IFiniteLocalEventSubscriber, IGlobalEventSubscriber
+    public abstract class BaseInteractor<TEntity> : BaseInteractor, IInteractor, ILocalEventOwner, IFiniteFieldSubscriber, IFiniteTriggerSubscriber, IFiniteLocalEventSubscriber, IGlobalEventSubscriber
         where TEntity : BaseEntity
     {
         [SerializeField, Tooltip("이 Interactor가 제어할 Entity")]

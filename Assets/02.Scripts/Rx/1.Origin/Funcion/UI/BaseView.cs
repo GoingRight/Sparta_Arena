@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Akasha
 {
-    public abstract class BaseView : RxContextBehaviour, IInteractLogicalSubscriber, IFiniteLocalEventSubscriber
+    public abstract class BaseView : RxContextBehaviour, IUnfiniteFieldSubscriber, IFiniteLocalEventSubscriber
     {
 
     }

@@ -4,21 +4,27 @@ using System.Linq;
 
 namespace Akasha
 {
-    public class RxList<T> : IRxField, IRxObservable<List<T>>
+    public class RxList<T> : IRxField, IRxObservable<List<T>>, IRxDynamicSubscribable
     {
         private readonly List<T> _items = new();
         private readonly RxSubscription<List<T>> _subscription = new();
         private readonly RxSubscription<ListDelta<T>> _deltaSubscription = new();
+        private readonly Dictionary<Action<object>, Action<List<T>>> _wrappedSubs = new();
+        private readonly object _owner;
 
         public List<T> Value => _items.ToList();
-
         public int Count => _items.Count;
         public T this[int index] => _items[index];
+
+        public RxList(object owner)
+        {
+            ValidateOwner(owner);
+            _owner = owner;
+        }
 
         public void Add(T item)
         {
             _items.Add(item);
-
             RxQueue.Enqueue(() =>
             {
                 Notify();
@@ -101,7 +107,6 @@ namespace Akasha
         }
 
         private void Notify() => this.WithContext(() => _subscription.NotifyAll(Value));
-
         private void NotifyDelta(ListDelta<T> delta) => this.WithContext(() => _deltaSubscription.NotifyAll(delta));
 
         public void SubscribeLaw(Action<List<T>> subscriber, object context, RxType relationType)
@@ -109,7 +114,7 @@ namespace Akasha
             if (relationType != RxType.Logical && relationType != RxType.Functional)
                 throw new InvalidOperationException("[RxList.Subscribe] Functional 또는 Logical 구독만 허용됩니다.");
 
-            RxValidator.ValidateFieldSubscriber(context, this);
+            RxValidator.ValidateFieldSubscriber(context, _owner);
             _subscription.Add(subscriber, context, relationType);
             subscriber(_items.ToList());
         }
@@ -119,7 +124,7 @@ namespace Akasha
             if (relationType != RxType.Logical)
                 throw new InvalidOperationException("[RxList.SubscribeDelta] Logical 구독만 허용됩니다.");
 
-            RxValidator.ValidateFieldSubscriber(context, this);
+            RxValidator.ValidateFieldSubscriber(context, _owner);
             _deltaSubscription.Add(subscriber, context, relationType);
         }
 
@@ -129,16 +134,37 @@ namespace Akasha
         public IDisposable Bind(Action<List<T>> subscriber, object context, RxType relationType)
         {
             SubscribeLaw(subscriber, context, relationType);
-            return new SubscriptionDisposable<List<T>>(this, subscriber);
+            return new DelegateDisposable(() => UnsubscribeLaw(subscriber));
         }
 
         public IDisposable SubscribeDeltaWithDisposable(Action<ListDelta<T>> subscriber, object context, RxType relationType)
         {
             SubscribeDelta(subscriber, context, relationType);
-            return new DeltaDisposable<T>(this, subscriber);
+            return new DelegateDisposable(() => UnsubscribeDelta(subscriber));
+        }
+
+        public void SubscribeByObject(Action<object> callback, object context, RxType type)
+        {
+            void Wrapped(List<T> list) => callback(list);
+            _wrappedSubs[callback] = Wrapped;
+            SubscribeLaw(Wrapped, context, type);
+        }
+
+        public void UnsubscribeByObject(Action<object> callback)
+        {
+            if (_wrappedSubs.TryGetValue(callback, out var wrapped))
+            {
+                UnsubscribeLaw(wrapped);
+                _wrappedSubs.Remove(callback);
+            }
+        }
+
+        private void ValidateOwner(object owner)
+        {
+            if (owner is not IRxFieldOwner && owner is not IRxExprOwner && owner is not IRxUnsafe)
+                throw new InvalidOperationException($"[RxList] {owner?.GetType().Name}는 RxList의 유효한 소유자가 아닙니다.");
         }
     }
-
 
     public abstract class ListDelta<T>
     {

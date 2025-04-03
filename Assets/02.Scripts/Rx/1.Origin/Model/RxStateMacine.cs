@@ -3,8 +3,17 @@ using System.Collections.Generic;
 
 namespace Akasha
 {
-    public class RxStateMachine<T> : IRxStateMachine, IFunctionalSubscriber, IFiniteTriggerSubscriber, IFiniteLocalEventSubscriber where T : Enum
+    public class RxStateMachine<T> : IRxStateMachine, IRxExprOwner, IFiniteTriggerSubscriber, IFiniteLocalEventSubscriber where T : Enum
     {
+        public object? Owner { get; private set; }
+
+        RxStateMachine(object owner)
+        {
+            if (owner is IRxStateOwner)
+                Owner = owner;
+            else throw new InvalidOperationException($"[RxStateMachine] {owner}는 RxStateMachine를 소유할 권한이 없습니다.");
+        }
+
         public readonly RxVar<T> ActiveState;
 
         private readonly Dictionary<T, Func<bool>?> _conditions = new();

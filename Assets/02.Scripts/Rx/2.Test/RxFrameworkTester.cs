@@ -39,7 +39,7 @@ public class RxFrameworkTester : MonoBehaviour
         Debug.Log($"[TEST] 모든 테스트 완료 ({testCases.Count}건)");
     }
 }
-public class RxVarTest : ITestCase, IInteractLogicalSubscriber
+public class RxVarTest : ITestCase, IRxFieldOwner,IFiniteFieldSubscriber
 {
     public string Name => "RxVar";
 
@@ -59,7 +59,7 @@ public class RxVarTest : ITestCase, IInteractLogicalSubscriber
             throw new System.Exception("RxVar가 정상적으로 값을 전달하지 못함");
     }
 }
-public class RxExprTest : ITestCase, IFunctionalSubscriber
+public class RxExprTest : ITestCase, IRxFieldOwner, IFiniteFieldSubscriber
 {
     public string Name => "RxExpr";
 
@@ -96,7 +96,7 @@ public class RxExprTest : ITestCase, IFunctionalSubscriber
             throw new Exception("RxExpr (bool 조건식)가 반응하지 않음");
     }
 }
-public class RxFlagTest : ITestCase, IFunctionalSubscriber
+public class RxFlagTest : ITestCase, IRxFieldOwner, IFiniteFieldSubscriber
 {
     public string Name => "RxFlag";
 
@@ -122,13 +122,13 @@ public class RxFlagTest : ITestCase, IFunctionalSubscriber
 
     private class DummyModel : IRxModel { } // 최소 권한만 구현
 }
-public class RxListTest : ITestCase, IInteractLogicalSubscriber
+public class RxListTest : ITestCase, IRxFieldOwner, IFiniteFieldSubscriber
 {
     public string Name => "RxList";
 
     public void Run()
     {
-        var list = new RxList<string>();
+        var list = new RxList<string>(this);
         List<string> current = null;
 
         list.Bind(v => {
@@ -163,7 +163,7 @@ public class RxTriggerTest : ITestCase, IUnfiniteTriggerSubscriber
     }
 }
 
-public class RxStateMachineTest : ITestCase, IInteractLogicalSubscriber, IFunctionalSubscriber
+public class RxStateMachineTest : ITestCase,IRxStateOwner, IRxFieldOwner, IFiniteFieldSubscriber
 {
     public string Name => "RxStateMachine";
 

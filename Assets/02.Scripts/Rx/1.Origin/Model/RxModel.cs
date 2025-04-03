@@ -3,13 +3,16 @@ using Akasha;
 
 namespace Akasha
 {
-    public abstract class RxModel : IRxModel, IFunctionalSubscriber
+    public abstract class RxModel : IRxModel, IRxExprOwner
     {
-        public object? ReactiveOwner { get; private set; }
+        public object? Owner { get; private set; }
 
-        public void SetReactiveOwner(object owner)
+        public RxModel(object owner)
         {
-            ReactiveOwner = owner;
+            if (owner is IRxStateOwner)
+                Owner = owner;
+            else throw new InvalidOperationException($"[RxModel] {owner}는 RxModel를 소유할 권한이 없습니다.");
         }
+
     }
 }

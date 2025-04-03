@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Akasha
 {
-    public abstract class Goldbug : RxContextBehaviour, IRxUnsafe, IUnfiniteTriggerSubscriber, IUnfiniteLocalEventSubscriber, IGlobalEventSubscriber
+    public abstract class Goldbug : RxContextBehaviour, IRxUnsafe
     {
         protected override void OnInit()
         {

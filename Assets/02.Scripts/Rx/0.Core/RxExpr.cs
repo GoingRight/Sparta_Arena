@@ -55,7 +55,7 @@ namespace Akasha
         public IDisposable Bind(Action<T> subscriber, object context, RxType relationType)
         {
             SubscribeLaw(subscriber, context, relationType);
-            return new SubscriptionDisposable<T>(this, subscriber);
+            return new DelegateDisposable(() => UnsubscribeLaw(subscriber));
         }
 
         public void UnsubscribeLaw(Action<T> subscriber)

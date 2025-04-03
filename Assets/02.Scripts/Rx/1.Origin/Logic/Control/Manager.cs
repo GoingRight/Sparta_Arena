@@ -4,10 +4,12 @@ namespace Akasha
 {
     public abstract class Manager<T> : RxContextBehaviour,
         IManager,
-        IGlobalLogicalSubscriber,
-        IGlobalEventSubscriber,
+        IRxStateOwner,
+        IRxExprOwner,
+        IGlobalEventOwner,        
         IUnfiniteTriggerSubscriber,
-        IUnfiniteLocalEventSubscriber
+        IUnfiniteLocalEventSubscriber,
+        IGlobalEventSubscriber
         where T : Manager<T>
     {
         private static T? instance;

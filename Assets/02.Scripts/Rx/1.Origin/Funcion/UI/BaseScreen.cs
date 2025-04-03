@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Akasha
 {
-    public abstract class BaseScreen : RxContextBehaviour, IScreen, IInteractLogicalSubscriber, IFiniteLocalEventSubscriber
+    public abstract class BaseScreen : RxContextBehaviour, IRxFieldOwner, IUnfiniteFieldSubscriber, IFiniteLocalEventSubscriber
     {
         private BasePresenter? _presenter;
 
